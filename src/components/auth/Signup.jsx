@@ -17,7 +17,7 @@ export default function Signup() {
 
       if (resp.status === 200) {
         console.log(resp.json());
-        goto("/");
+        goto("/main");
       } else {
         let err = await resp.text();
         alert(err);

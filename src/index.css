@@ -1,12 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Poppins&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 body {
   width: 100vw;
   height: 100vh;
+  font-family: "Poppins", sans-serif;
 }
+/* signup page */
+
 .signup-main {
   display: flex;
   flex-direction: column;
@@ -41,10 +46,218 @@ form button {
   border: none;
 }
 
+/* login page */
 .login-main {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* header */
+.header {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  padding: 10px;
+  border-bottom: 2px solid gray;
+  background-color: white;
+}
+.username {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.username button {
+  background-color: rgb(213, 56, 56);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #981f1f;
+}
+/* ouelet */
+.outlet {
+  width: 100vw;
+  min-height: 100vh;
+  padding-top: 50px;
+  background-color: rgb(234, 232, 232);
+}
+
+/* home */
+.home {
+  padding-top: 20px;
+}
+.home .kahoots-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 1px solid;
+}
+.kahoots-container > button {
+  position: absolute;
+  right: 10px;
+  background-color: rgb(56, 82, 213);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1f4598;
+}
+
+.kahoots-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80vw;
+  padding: 20px 10px;
+  border: 1px solid;
+}
+.kahoot-card {
+  background-color: white;
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+.kahoot-card button {
+  background-color: rgb(56, 82, 213);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1f4598;
+}
+
+/* details */
+.detail {
+  padding: 10px;
+  display: flex;
+  border: 1px solid;
+}
+.kahoot-detail {
+  display: flex;
+  gap: 10px;
+  border: 1px solid;
+}
+.kahoot-detail .left button {
+  background-color: rgb(56, 82, 213);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1f4598;
+}
+
+.kahoot-detail .questions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 70vw;
+  border: 1px solid;
+}
+.kahoot-detail .ques-card {
+  background-color: white;
+  width: 100%;
+  border: 1px solid;
+}
+.kahoot-detail .options-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid;
+}
+
+.kahoot-detail .option {
+  width: 25%;
+  height: 30px;
+  border: 1px solid;
+}
+
+/* create */
+
+.create {
+  height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+}
+.create .left {
+  padding: 10px;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+}
+.create .left button {
+  background-color: rgb(56, 82, 213);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1f4598;
+}
+.create .middle {
+  padding: 10px;
+  width: 60vw;
+}
+
+.middle .options {
+  width: 50vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.middle .options input {
+  width: 22vw;
+}
+
+.middle .options>div {
+  position: relative;
+  border: 1px solid;
+}
+.middle .circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid gray;
+  position: absolute;
+  right: 2px;
+  top: 10px;
+}
+
+.create .right {
+  padding: 10px;
+  width: 20vw;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.create .right button {
+  background-color: rgb(56, 82, 213);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1f4598;
+}
+
+.right .time-limit {
+  display: flex;
+  flex-direction: column;
 }

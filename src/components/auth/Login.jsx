@@ -1,10 +1,12 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { addUser } from "../../slices/userSlice";
 export default function Login() {
-  let goto = useDispatch();
+  let goto = useNavigate();
+  let dispatch = useDispatch();
   let logIn = async (obj) => {
     try {
       let resp = await fetch("http://localhost:8000/auth/login", {
@@ -16,8 +18,13 @@ export default function Login() {
       });
 
       if (resp.status === 200) {
-        console.log(resp.json());
-        goto("/");
+        let data = await resp.json();
+        console.log(data);
+
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        dispatch(addUser(data.userInfo));
+        goto("/main");
       } else {
         let err = await resp.text();
         alert(err);
@@ -62,7 +69,7 @@ export default function Login() {
               <div>
                 <label htmlFor="password">password</label>
                 <Field
-                  type="text"
+                  type="password"
                   id="password"
                   name="password"
                   placeholder="******"
