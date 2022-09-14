@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 let initialState = {
   userInfo: null,
   kahoots: [],
-  socket:null
+  socket: null,
 };
 if (localStorage.getItem("userInfo") !== "undefined") {
   initialState.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -18,11 +19,31 @@ const userSlice = createSlice({
     addKahoot: (state, action) => {
       state.kahoots = action.payload;
     },
-    addSocket:(state,action)=>{
-      state.socket=action.payload
-    }
+    addSocket: (state, action) => {
+      state.socket = action.payload;
+    },
+    deleteQues: (state, action) => {
+      let { kahootId, queId } = action.payload;
+      let kahoots = state.kahoots;
+      kahoots.map((e) => {
+        if (e._id === kahootId) {
+          e.questions = e.questions.filter((el) => el._id !== queId);
+        }
+      });
+      state.kahoots = kahoots;
+    },
+    addQues: (state, action) => {
+      let { kahootId, ques } = action.payload;
+      let kahoots = state.kahoots;
+      kahoots.map((e) => {
+        if (e._id === kahootId) {
+          e.questions.push(ques);
+        }
+      });
+      state.kahoots = kahoots;
+    },
   },
 });
 
 export default userSlice.reducer;
-export const { addUser,addKahoot,addSocket } = userSlice.actions;
+export const { addUser, addKahoot, addSocket, deleteQues,addQues } = userSlice.actions;

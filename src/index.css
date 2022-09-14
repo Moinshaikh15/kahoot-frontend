@@ -146,14 +146,22 @@ form button {
 
 /* details */
 .detail {
-  padding: 10px;
   display: flex;
   border: 1px solid;
 }
 .kahoot-detail {
+  padding: 10px;
   display: flex;
   gap: 10px;
   border: 1px solid;
+}
+.kahoot-detail .left {
+  width: 40vh;
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 .kahoot-detail .left button {
   background-color: rgb(56, 82, 213);
@@ -167,25 +175,32 @@ form button {
 .kahoot-detail .questions-container {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 10px;
   width: 70vw;
-  border: 1px solid;
+  
 }
 .kahoot-detail .ques-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   background-color: white;
+  padding: 5px;
   width: 100%;
-  border: 1px solid;
 }
 .kahoot-detail .options-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
   border: 1px solid;
 }
 
 .kahoot-detail .option {
-  width: 25%;
+  width: 25vh;
   height: 30px;
   border: 1px solid;
 }
