@@ -1,39 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addKahoot } from "../slices/userSlice";
 
 export default function Home() {
-  let dispatch = useDispatch();
   let goto = useNavigate();
   let { kahoots } = useSelector((state) => state.user);
-  let getKahoots = async () => {
-    let token = localStorage.getItem("accessToken");
-    try {
-      let resp = await fetch("http://localhost:8000/kahoot/", {
-        method: "GET",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-
-      if (resp.status === 200) {
-        let data = await resp.json();
-        dispatch(addKahoot(data));
-        console.log(data);
-      } else {
-        let err = await resp.text();
-        alert(err);
-      }
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  useEffect(() => {
-    getKahoots();
-  }, []);
 
   return (
     <div className="home">
@@ -49,7 +20,15 @@ export default function Home() {
             >
               <h5>{el.title}</h5>
               <div>
-                <button>edit</button>
+                <button>Edit</button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goto(`/play/${el._id}`);
+                  }}
+                >
+                  Start
+                </button>
               </div>
               {/* <p>last updated: {el.updatedAt.toLocaleString()}</p> */}
             </div>

@@ -77,7 +77,7 @@ form button {
   border: none;
   color: white;
   padding: 5px 15px;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: 5px;
   box-shadow: 0px 4px 0px #981f1f;
 }
@@ -92,6 +92,7 @@ form button {
 /* home */
 .home {
   padding-top: 20px;
+  padding: 10px;
 }
 .home .kahoots-container {
   position: relative;
@@ -108,7 +109,6 @@ form button {
   border: none;
   color: white;
   padding: 5px 15px;
-  font-size: 16px;
   border-radius: 5px;
   box-shadow: 0px 4px 0px #1f4598;
 }
@@ -130,6 +130,10 @@ form button {
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
+}
+.kahoot-card div {
+  display: flex;
+  gap: 10px;
 }
 .kahoot-card button {
   background-color: rgb(56, 82, 213);
@@ -226,7 +230,7 @@ form button {
   width: 22vw;
 }
 
-.middle .options>div {
+.middle .options > div {
   position: relative;
   border: 1px solid;
 }
@@ -260,4 +264,36 @@ form button {
 .right .time-limit {
   display: flex;
   flex-direction: column;
+}
+
+/* Quiz */
+
+.quiz {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+.quiz .ques {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.quiz .option {
+  display: flex;
+  width: 50vw;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid;
+}
+.quiz .option button {
+  background-color: rgb(128, 99, 182);
+  box-shadow: 0px 4px 0px #531f98;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: white;
+  width: 25vh;
+  border: none;
 }

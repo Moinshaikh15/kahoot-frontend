@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Detail() {
   let { id } = useParams();
-
+  let goto = useNavigate();
   let { kahoots } = useSelector((state) => state.user);
   console.log(id);
   return (
@@ -14,7 +14,9 @@ export default function Detail() {
           <div className="kahoot-detail">
             <div className="left">
               <h4>{el.title}</h4>
-              <button>Start</button>
+              <button onClick={() => goto(`/play/${el._id}`)}>
+                Start
+              </button>
             </div>
 
             <div className="questions-container">
