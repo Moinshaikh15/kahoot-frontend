@@ -25,6 +25,9 @@ export default function Play() {
       setRoomId(id);
     });
   }
+  socket?.on("member-joined", (data) => {
+    console.log(data);
+  });
 
   return (
     <div className="play">

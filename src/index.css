@@ -179,7 +179,6 @@ form button {
   align-items: flex-start;
   gap: 10px;
   width: 70vw;
-  
 }
 .kahoot-detail .ques-card {
   display: flex;
@@ -189,7 +188,7 @@ form button {
   padding: 5px;
   width: 100%;
 }
-.kahoot-detail .ques-card img{
+.kahoot-detail .ques-card img {
   width: 60px;
 }
 .kahoot-detail .options-container {
@@ -297,7 +296,6 @@ form button {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  
 }
 .quiz .option {
   display: flex;
@@ -318,14 +316,27 @@ form button {
 }
 
 /* play */
-.play{
+.play {
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.play .room-id{
+.play .room-id {
   display: flex;
   gap: 10px;
+}
+
+/* player */
+.player {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.player .player-id {
+  display: flex;
+  flex-direction: column;
 }

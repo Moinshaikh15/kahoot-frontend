@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addSocket } from "../slices/userSlice";
 import Play from "./Play";
 import Room from "./Room";
+import Player from "./Player";
 export default function App() {
   let dispatch = useDispatch();
 
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/play" element={<Play />} />
         <Route path="/quiz/:roomId" element={<Quiz />} />
         <Route path="/room" element={<Room />} />
+        <Route path="/player/" element={<Player />} />
       </Routes>
     </div>
   );
