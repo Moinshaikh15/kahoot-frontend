@@ -1,43 +1,68 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
+let kahoot;
 export default function Quiz() {
+  let location = useLocation();
+  let id = location?.state?.id;
   let { socket } = useSelector((state) => state.user);
-  let { kahoots } = useSelector((state) => state.user);
+  let { kahoots, ques } = useSelector((state) => state.user);
   let dispatch = useDispatch();
-  let { id } = useParams();
-  let kahoot;
   let [currQues, setCurrQues] = useState("");
   let [options, setOptions] = useState([]);
-  kahoots.map((e) => {
-    if (e._id === id) {
-      kahoot = e;
-    }
+  // let [kahoot, setKahoot] = useState(null);
+  let time;
+  let [questions, setQuestions] = useState([]);
+
+  //socket's
+  socket.on("got-newQue", ({ currQues, options }) => {
+    setCurrQues(currQues);
+    setOptions(options);
   });
-  let time = Number(kahoot.timeLimit) * 1000;
+
+  // functions
   let play = () => {
     let i = 0;
-    setCurrQues(kahoot.questions[i].ques);
-    setOptions(kahoot.questions[i].options);
-
+    setCurrQues(questions[i]?.ques);
+    setOptions(questions[i]?.options);
+    socket.emit("new-que", { currQues, options });
     let interval = setInterval(() => {
       i++;
-      //   console.log(kahoot.questions.length,i)
-      setCurrQues(kahoot.questions[i].ques);
-      setOptions(kahoot.questions[i].options);
+      setCurrQues(questions[i]?.ques);
+      setOptions(questions[i]?.options);
+      socket.emit("new-que", { currQues, options });
 
       if (i >= kahoot.questions.length) {
         clearInterval(interval);
       }
     }, time);
   };
-  console.log(kahoot);
+
+  let load = () => {
+    kahoots.map((e) => {
+      if (e._id === id) {
+        kahoot = e;
+        console.log(kahoot, "llll");
+      }
+    });
+    console.log(kahoot, "kkkkk");
+    kahoot?.questions?.map((e) => {
+      ques.map((el) => {
+        if (el._id === e) {
+          setQuestions((oldArr) => [...oldArr, el]);
+        }
+      });
+    });
+    time = Number(kahoot.timeLimit) * 1000;
+    // play();
+  };
+
   useEffect(() => {
-    play();
     const newSocket = io("http://localhost:8000");
     dispatch(addSocket(newSocket));
+    load();
   }, []);
 
   if (socket !== null) {
@@ -45,9 +70,10 @@ export default function Quiz() {
       console.log("Client connected");
     });
   }
+  console.log(currQues);
   return (
     <div className="quiz">
-      <h2>{kahoot.title}</h2>
+      <h2>{kahoot?.title}</h2>
       <div className="timer"></div>
       <div className="ques">
         <h3>{currQues}</h3>

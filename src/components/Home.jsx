@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setQues } from "../slices/userSlice";
 
 export default function Home() {
   let goto = useNavigate();
   let { kahoots } = useSelector((state) => state.user);
-
+  let dispatch = useDispatch();
+  useEffect(() => {
+    getQue();
+  }, []);
+  let getQue = async () => {
+    let token = localStorage.getItem("accessToken");
+    try {
+      let resp = await fetch(`http://localhost:8000/que/`, {
+        method: "GET",
+        headers: {
+          "content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (resp.status === 200) {
+        let data = await resp.json();
+        dispatch(setQues(data));
+      } else {
+        let err = await resp.text();
+        alert(err.message);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
   return (
     <div className="home">
       <div className="kahoots-container">
@@ -20,11 +45,18 @@ export default function Home() {
             >
               <h5>{el.title}</h5>
               <div>
-                <button>Edit</button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    goto(`/play/${el._id}`);
+                    goto(`/main/create`, { state: { currKahoot: el } });
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goto(`/play`, { state: { id: el._id } });
                   }}
                 >
                   Start

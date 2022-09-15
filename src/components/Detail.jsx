@@ -1,82 +1,88 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteQues } from "../slices/userSlice";
+import { deleteQues, setQues } from "../slices/userSlice";
 
 export default function Detail() {
   let { id } = useParams();
   let goto = useNavigate();
   let dispatch = useDispatch();
+  let { ques } = useSelector((state) => state.user);
   let { kahoots } = useSelector((state) => state.user);
-
-  let deleteQ = async (id, queId) => {
-    let newKahoots = JSON.parse(JSON.stringify(kahoots));
-    let data;
-    newKahoots.map((e) => {
-      if (e._id === id) {
-        e.questions = e.questions.filter((el) => el._id !== queId);
-        data = e;
-      }
-    });
-    let token = localStorage.getItem("accessToken");
-    try {
-      let resp = await fetch(`http://localhost:8000/kahoot/${id}/edit`, {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(data),
-      });
-      if (resp.status === 200) {
-        console.log("deleted");
-      } else {
-        let err = await resp.text();
-        alert(err.message);
-      }
-    } catch (err) {
-      alert(err.message);
+  let currKahoot = {};
+  kahoots.map((e) => {
+    if (e._id === id) {
+      currKahoot = e;
     }
-  };
+  });
 
+  // useEffect(() => {
+  //   getQue();
+  // }, []);
+  // let getQue = async () => {
+  //   let token = localStorage.getItem("accessToken");
+  //   try {
+  //     let resp = await fetch(`http://localhost:8000/que/`, {
+  //       method: "GET",
+  //       headers: {
+  //         "content-Type": "application/json",
+  //         Authorization: "Bearer " + token,
+  //       },
+  //     });
+  //     if (resp.status === 200) {
+  //       let data = await resp.json();
+  //       dispatch(setQues(data));
+  //     } else {
+  //       let err = await resp.text();
+  //       alert(err.message);
+  //     }
+  //   } catch (err) {
+  //     alert(err.message);
+  //   }
+  // };
+  // console.log(currKahoot, ques);
   return (
     <div className="detail">
-      {kahoots.map((el) =>
-        el._id === id ? (
-          <div className="kahoot-detail" key={el._id}>
-            <div className="left">
-              <h4>{el.title}</h4>
-              <button onClick={() => goto(`/play/${el._id}`)}>Start</button>
-            </div>
+      <div className="kahoot-detail" key={currKahoot._id}>
+        <div className="left">
+          <h4>{currKahoot.title}</h4>
+          <button
+            onClick={() => goto(`/play`, { state: { id: currKahoot._id } })}
+          >
+            Start
+          </button>
+          <button
+            onClick={() => goto("/main/create", { state: { currKahoot } })}
+          >
+            Edit
+          </button>
+        </div>
 
-            <div className="questions-container">
-              {el.questions.map((e) => (
+        <div className="questions-container">
+          {currKahoot.questions.map((element) =>
+            ques.map((e) => {
+              console.log(element, e._id);
+              return element === e._id ? (
                 <div key={e._id} className="ques-card">
-                  <p>{e.ques}</p>
-                  <div className="options-container">
-                    {e.options.map((elem) => (
-                      <div key={e._id + elem} className="option">
-                        <p>{elem}</p>
-                      </div>
-                    ))}
+                  <div>
+                    <p>{e.ques}</p>
+                    <div className="options-container">
+                      {e.options.map((elem) => (
+                        <div key={e._id + elem} className="option">
+                          <p>{elem}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <p
-                    style={{ color: "red" }}
-                    onClick={() => {
-                      dispatch(deleteQues({ kahootId: el._id, queId: e._id }));
-                      deleteQ(el._id, e._id);
-                    }}
-                  >
-                    delete
-                  </p>
+                  <img src={e.imgUrl} alt="" />
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          ""
-        )
-      )}
+              ) : (
+                ""
+              );
+            })
+          )}
+        </div>
+      </div>
     </div>
   );
 }

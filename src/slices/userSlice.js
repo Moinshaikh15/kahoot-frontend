@@ -5,6 +5,7 @@ let initialState = {
   userInfo: null,
   kahoots: [],
   socket: null,
+  ques: [],
 };
 if (localStorage.getItem("userInfo") !== "undefined") {
   initialState.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -42,8 +43,12 @@ const userSlice = createSlice({
       });
       state.kahoots = kahoots;
     },
+    setQues: (state, action) => {
+      state.ques = action.payload;
+    },
   },
 });
 
 export default userSlice.reducer;
-export const { addUser, addKahoot, addSocket, deleteQues,addQues } = userSlice.actions;
+export const { addUser, addKahoot, addSocket, deleteQues, addQues, setQues } =
+  userSlice.actions;

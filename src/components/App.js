@@ -25,8 +25,8 @@ export default function App() {
           <Route path="/main/:id" element={<Detail />} />
           <Route path="/main/create" element={<Create />} />
         </Route>
-        <Route path="/play/:id" element={<Play />} />
-        <Route path="/quiz/:id" element={<Quiz />} />
+        <Route path="/play" element={<Play />} />
+        <Route path="/quiz/:roomId" element={<Quiz />} />
         <Route path="/room" element={<Room />} />
       </Routes>
     </div>
