@@ -5,7 +5,7 @@ import { setQues } from "../slices/userSlice";
 
 export default function Home() {
   let goto = useNavigate();
-  let { kahoots } = useSelector((state) => state.user);
+  let { kahoots, userInfo } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   useEffect(() => {
     getQue();
@@ -37,34 +37,38 @@ export default function Home() {
         <button onClick={() => goto("/main/create")}>Create</button>
         <h4>My Kahoots</h4>
         <div className="kahoots-card-container">
-          {kahoots.map((el) => (
-            <div
-              key={el._id}
-              className="kahoot-card"
-              onClick={() => goto(`/main/${el._id}`)}
-            >
-              <h5>{el.title}</h5>
-              <div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goto(`/main/create`, { state: { currKahoot: el } });
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goto(`/play`, { state: { id: el._id } });
-                  }}
-                >
-                  Start
-                </button>
+          {kahoots.map((el) =>
+            el.creator === userInfo._id ? (
+              <div
+                key={el._id}
+                className="kahoot-card"
+                onClick={() => goto(`/main/${el._id}`)}
+              >
+                <h5>{el.title}</h5>
+                <div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goto(`/main/create`, { state: { currKahoot: el } });
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goto(`/play`, { state: { id: el._id } });
+                    }}
+                  >
+                    Start
+                  </button>
+                </div>
+                {/* <p>last updated: {el.updatedAt.toLocaleString()}</p> */}
               </div>
-              {/* <p>last updated: {el.updatedAt.toLocaleString()}</p> */}
-            </div>
-          ))}
+            ) : (
+              ""
+            )
+          )}
         </div>
       </div>
     </div>

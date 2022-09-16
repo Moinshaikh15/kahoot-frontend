@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
+import QRCode from "react-qr-code";
 export default function Play() {
   let location = useLocation();
   let id = location?.state?.id;
@@ -10,6 +11,7 @@ export default function Play() {
   let dispatch = useDispatch();
   let { socket } = useSelector((state) => state.user);
   let [roomId, setRoomId] = useState("");
+  let [usersJoined, setUsersJoined] = useState([]);
   useEffect(() => {
     const newSocket = io("http://localhost:8000");
     dispatch(addSocket(newSocket));
@@ -26,16 +28,58 @@ export default function Play() {
     });
   }
   socket?.on("member-joined", (data) => {
+    setUsersJoined(data);
     console.log(data);
   });
 
   return (
     <div className="play">
-      <button onClick={() => goto(`/quiz/${roomId}`, { state: { id } })}>
-        start
-      </button>
-      <div className="room-id">
-        <p>/quiz</p> {roomId !== "" ? <p>{roomId}</p> : ""}
+      <div className="room-id-container">
+        <div className="id-card">
+          <div className="room-id">
+            <p>join at http://localhost:3000/player</p>
+            <div>
+              Game Pin
+              {roomId !== "" ? (
+                <p style={{ fontSize: "26px" }}>{roomId}</p>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+
+          {/* <div className="qr-code"> */}
+          <QRCode
+            value={`http://localhost:8000/quiz/${roomId}`}
+            className="qr-code"
+          ></QRCode>
+          {/* </div> */}
+        </div>
+      </div>
+
+      <div className="bottom">
+        <button
+          onClick={() =>
+            goto(`/quiz/${roomId}`, {
+              state: { id, memberCount: usersJoined.length },
+            })
+          }
+        >
+          start
+        </button>
+
+        <div className="member-container">
+          {usersJoined.map((e) => (
+            <p className="members-name">{e.name}</p>
+          ))}
+          {usersJoined.length === 0 ? (
+            <div style={{ color: "white",fontSize:'22px' }}>
+              <p>Waiting for members to Join</p>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </div>
   );

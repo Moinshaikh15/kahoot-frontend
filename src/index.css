@@ -100,7 +100,6 @@ form button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  border: 1px solid;
 }
 .kahoots-container > button {
   position: absolute;
@@ -119,7 +118,6 @@ form button {
   gap: 10px;
   width: 80vw;
   padding: 20px 10px;
-  border: 1px solid;
 }
 .kahoot-card {
   background-color: white;
@@ -222,6 +220,41 @@ form button {
   justify-content: flex-start;
   align-items: center;
   background-color: white;
+  gap: 10px;
+}
+.create .left > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.create .left .left-queCard {
+  position: relative;
+  border: 2px solid gray;
+  width: 90%;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.left .left-queCard .delete {
+  position: absolute;
+  width: 20px;
+  right: -20px;
+  bottom: 0;
+}
+.create .left .left-opt-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  width: 180px;
+  gap: 5px;
+}
+.create .left .left-opt-container div {
+  width: 60px;
+  height: 20px;
+  border: 2px solid gray;
 }
 .create .left button {
   background-color: rgb(56, 82, 213);
@@ -282,14 +315,159 @@ form button {
   flex-direction: column;
 }
 
+/* play */
+.play {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #511999;
+}
+.play .room-id-container {
+  padding: 10px;
+  height: 20vh;
+  display: flex;
+  gap: 20px;
+}
+
+.play .room-id-container .id-card {
+  gap: 10px;
+  width: 600px;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+}
+.play .id-card .room-id {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  height: 80px;
+  font-size: 16px;
+  gap: 10px;
+  border-radius: 5px;
+}
+.play .qr-code {
+  /* width: 80px;
+  height: 80px; */
+  background-color: white;
+  border-radius: 5px;
+  transform: scale(45%);
+}
+.play .member-container {
+  max-width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.play .members-name {
+  background-color: rgba(220, 218, 218, 0.704);
+  padding: 5px;
+  border-radius: 5px;
+}
+.play .bottom {
+  padding: 10px;
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  background-color: #6f31c1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.play .bottom button {
+  position: absolute;
+  right: 20px;
+  background-color: rgb(180, 176, 176);
+  padding: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #868585;
+}
+/* player */
+.player {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #511999;
+  color: white;
+  gap: 20px;
+}
+.player .player-id {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white;
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+}
+.player .player-id input {
+  padding: 5px;
+  border: 2px solid rgb(168, 165, 165);
+  border-radius: 5px;
+  font-size: 18px;
+}
+.player .player-id button {
+  background-color: rgb(51, 50, 50);
+  color: white;
+  padding: 5px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #161616;
+}
+
 /* Quiz */
 
 .quiz {
   display: flex;
   width: 100%;
+  height: 100vh;
   flex-direction: column;
   align-items: center;
-  border: 1px solid;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+  background-color: #6f31c1;
+}
+.quiz .next {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  background-color: rgb(114, 111, 111);
+  color: white;
+  padding: 5px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #4d4d4d;
+}
+.quiz .title {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: white;
+}
+.quiz .name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #511999;
+  color: white;
+  padding: 10px;
+  font-size: 18px;
 }
 .quiz .ques {
   display: flex;
@@ -297,46 +475,92 @@ form button {
   align-items: center;
   gap: 10px;
 }
+.quiz .ques h3 {
+  font-size: 40px;
+  color: white;
+}
+.quiz img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 1px solid rgb(174, 174, 174);
+}
 .quiz .option {
   display: flex;
-  width: 50vw;
+  width: 40vw;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
   border: 1px solid;
+  padding: 10px;
 }
 .quiz .option button {
-  background-color: rgb(128, 99, 182);
-  box-shadow: 0px 4px 0px #531f98;
+  background-color: rgb(247, 246, 249);
+  /* box-shadow: 0px 4px 0px #531f98; */
   border-radius: 5px;
   padding: 10px 20px;
-  color: white;
-  width: 25vh;
+  font-size: 36px;
+  font-weight: 700;
+  color: rgb(49, 58, 178);
+  width: 30vh;
+  height: 50px;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.quiz .overview {
+  position: absolute;
+  left: 10px;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.quiz .overview .opt {
+  background-color: white;
+  padding: 5px;
+  border-radius: 2px;
+  width: 20px;
 }
 
-/* play */
-.play {
+.quiz .scoreBoard {
+  background-color: white;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 10px;
+  border-radius: 5px;
+}
+.quiz .scoreBoard .score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: rgba(173, 180, 205, 0.593);
+}
+
+.quiz .your-score {
+  color: white;
+}
+.quiz .your-score .my-score {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.play .room-id {
-  display: flex;
   gap: 10px;
 }
 
-/* player */
-.player {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.quiz .your-score h1 {
+  font-size: 50px;
+  font-weight: 700;
 }
-.player .player-id {
-  display: flex;
-  flex-direction: column;
+
+.quiz .your-score p {
+  font-size: 25px;
 }

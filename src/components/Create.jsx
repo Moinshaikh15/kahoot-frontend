@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -6,12 +7,14 @@ import { deleteQues } from "../slices/userSlice";
 export default function Create() {
   let location = useLocation();
   let currKahoot = location?.state?.currKahoot;
-  let dispatch = useDispatch();
+  let goto = useDispatch();
   let { userInfo, ques } = useSelector((state) => state.user);
   let [questions, setQuestions] = useState([]);
   let [time, setTime] = useState(20);
   let [correctAns, setCorrectAns] = useState(null);
   let [queIdArr, setQueIdArr] = useState([]);
+  let queRef = useRef();
+  let imgRef = useRef();
   let ref1 = useRef();
   let ref2 = useRef();
   let ref3 = useRef();
@@ -20,13 +23,11 @@ export default function Create() {
   let [type, setType] = useState("quiz");
 
   useEffect(() => {
-   
     if (currKahoot) {
       setQuestions([]);
-      console.log('k',ques)
+      console.log("k", ques);
       currKahoot.questions.map((e) => {
         ques.map((el) => {
-        
           if (el._id === e) {
             console.log(el._id);
             setQuestions((oldArr) => [...oldArr, el]);
@@ -90,6 +91,7 @@ export default function Create() {
       if (resp.status === 200) {
         let respData = await resp.json();
         console.log(respData);
+      goto('/main')
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -150,6 +152,13 @@ export default function Create() {
 
     // data = JSON.stringify(data);
     setQuestions((oldArr) => [...oldArr, data]);
+    refTitle.current.value = "";
+    ref1.current.value = "";
+    ref2.current.value = "";
+    ref3.current.value = "";
+    ref4.current.value = "";
+    imgRef.current.value = "";
+    queRef.current.value = "";
   };
   let handleChange = (e) => {
     setTime(e.target.value);
@@ -160,20 +169,32 @@ export default function Create() {
       <div className="left">
         <div>
           {questions.map((e) => {
+            console.log(e);
             return (
-              <div>
+              <div className="left-queCard">
                 <p>{e.ques}</p>
-                <p
+                <img
                   style={{ color: "red", cursor: "pointer" }}
                   onClick={() => {
-                    // dispatch(
-                    //   deleteQues({ kahootId: currKahoot._id, queId: e._id })
-                    // );
                     deleteQ(e._id);
                   }}
-                >
-                  D
-                </p>
+                  src={"../delete.png"}
+                  className="delete"
+                />
+
+                {e.type === "quiz" ? (
+                  <div className="left-opt-container">
+                    <div>opt 1</div>
+                    <div>opt 2</div>
+                    <div>opt 3</div>
+                    <div>opt 4</div>
+                  </div>
+                ) : (
+                  <div className="left-opt-container">
+                    <div>true</div>
+                    <div>false</div>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -189,9 +210,16 @@ export default function Create() {
             placeholder="What is your Question"
             id="ques"
             name="ques"
+            ref={queRef}
           />
           <label htmlFor="img">Select image:</label>
-          <input type="file" id="img" name="img" accept="image/*" />
+          <input
+            type="file"
+            id="img"
+            name="img"
+            accept="image/*"
+            ref={imgRef}
+          />
 
           {type === "quiz" ? (
             <div className="options">
@@ -305,7 +333,7 @@ export default function Create() {
             </div>
           )}
 
-          <button type="submit">Add</button>
+          <button type="submit">Save Que</button>
         </form>
       </div>
       <div className="right">
@@ -324,7 +352,15 @@ export default function Create() {
           </select>
         </div>
         <label htmlFor="time">Type</label>
-        <select id="time" name="time" onChange={(e) => setType(e.target.value)}>
+        <select
+          id="time"
+          name="time"
+          onChange={(e) => {
+            ref1.current.value = "";
+            ref2.current.value = "";
+            setType(e.target.value);
+          }}
+        >
           <option value="quiz">Quiz</option>
           <option value="trueNfalse">True or false</option>
         </select>
