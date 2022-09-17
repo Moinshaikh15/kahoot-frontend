@@ -10,6 +10,64 @@ body {
   height: 100vh;
   font-family: "Poppins", sans-serif;
 }
+/* loading */
+.loading-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loading {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: none;
+}
+
+.square {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(52, 202, 88);
+  animation-name: circle;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  position: absolute;
+}
+
+@keyframes circle {
+  0% {
+    left: 0;
+    border-radius: 0;
+    top: 0;
+  }
+
+  25% {
+    left: 60px;
+    border-radius: 30px;
+    top: 0;
+  }
+
+  50% {
+    left: 60px;
+    border-radius: 0;
+    top: 60px;
+  }
+
+  75% {
+    left: 0;
+    border-radius: 30px;
+    top: 60px;
+  }
+
+  100% {
+    left: 0;
+    border-radius: 0;
+    top: 0;
+  }
+}
+
 /* signup page */
 
 .signup-main {
@@ -63,8 +121,8 @@ form button {
   align-items: center;
   position: fixed;
   padding: 10px;
-  border-bottom: 2px solid gray;
   background-color: white;
+  box-shadow: 0px 1px 4px #b8b5b5;
 }
 .username {
   display: flex;
@@ -84,15 +142,15 @@ form button {
 /* ouelet */
 .outlet {
   width: 100vw;
+  max-width: 100vw;
   min-height: 100vh;
-  padding-top: 50px;
   background-color: rgb(234, 232, 232);
 }
 
 /* home */
 .home {
-  padding-top: 20px;
   padding: 10px;
+  padding-top: 70px;
 }
 .home .kahoots-container {
   position: relative;
@@ -100,6 +158,7 @@ form button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  padding-top: 10px;
 }
 .kahoots-container > button {
   position: absolute;
@@ -119,19 +178,52 @@ form button {
   width: 80vw;
   padding: 20px 10px;
 }
+
 .kahoot-card {
   background-color: white;
   width: 100%;
-  height: 60px;
+  height: 120px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
+  position: relative;
+}
+.kahoot-card .kahoot-title-card {
+  display: flex;
+  gap: 10px;
+}
+.kahoot-card .kahoot-title-card .kahoot-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.kahoot-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
 }
 .kahoot-card div {
   display: flex;
+  align-items: center;
   gap: 10px;
+}
+.kahoot-card div .edit-img {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.kahoot-card h4 {
+  font-size: 20px;
+  color: #4a4949;
+}
+.kahoot-card div p {
+  font-weight: 600;
+  color: #4d4d4d;
 }
 .kahoot-card button {
   background-color: rgb(56, 82, 213);
@@ -145,63 +237,98 @@ form button {
 /* details */
 .detail {
   display: flex;
-  border: 1px solid;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding-top: 50px;
 }
 .kahoot-detail {
-  padding: 10px;
   display: flex;
   gap: 10px;
-  border: 1px solid;
 }
 .kahoot-detail .left {
-  width: 40vh;
-  border: 1px solid gray;
+  padding: 10px;
+  width: 25vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  background-color: white;
+  box-shadow: 0px 2px 6px #cac8c8;
 }
 .kahoot-detail .left button {
   background-color: rgb(56, 82, 213);
+  width: 120px;
   border: none;
   color: white;
   padding: 5px 15px;
   border-radius: 5px;
+  font-size: 16px;
+  font-weight: 700;
   box-shadow: 0px 4px 0px #1f4598;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.kahoot-detail .left img {
+  width: 24vw;
+  height: 32vh;
+  object-fit: cover;
 }
 
 .kahoot-detail .questions-container {
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 10px;
-  width: 70vw;
+  width: 60vw;
+  overflow-y: auto;
 }
 .kahoot-detail .ques-card {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   background-color: white;
-  padding: 5px;
   width: 100%;
+  height: 160px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.kahoot-detail .ques-card > div {
+  padding: 5px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}
+.kahoot-detail .ques-card h4 {
+  font-size: 18px;
 }
 .kahoot-detail .ques-card img {
-  width: 60px;
+  width: 160px;
+  height: 160px;
 }
 .kahoot-detail .options-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   flex-wrap: wrap;
-  border: 1px solid;
 }
 
 .kahoot-detail .option {
-  width: 25vh;
-  height: 30px;
-  border: 1px solid;
+  width: 400px;
+  padding-left: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid rgb(208, 206, 206);
+  /* background-color: rgb(232, 233, 232); */
+  /* border-radius: 5px; */
 }
 
 /* create */
@@ -211,9 +338,11 @@ form button {
   width: 100%;
   max-width: 100vw;
   display: flex;
+  padding-top: 50px;
 }
 .create .left {
   padding: 10px;
+  padding-top: 20px;
   width: 20vw;
   display: flex;
   flex-direction: column;
@@ -221,6 +350,8 @@ form button {
   align-items: center;
   background-color: white;
   gap: 10px;
+  /* border-top: 2px solid rgb(179, 178, 178);
+  border-right: 1px solid rgb(198, 197, 197); */
 }
 .create .left > div {
   display: flex;
@@ -229,17 +360,29 @@ form button {
 }
 .create .left .left-queCard {
   position: relative;
-  border: 2px solid gray;
+  border-radius: 3px;
   width: 90%;
   height: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  padding: 4px;
+  background-color: rgb(240, 238, 238);
+}
+.create .left .left-queCard p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+  height: 25px;
+  color: gray;
+  text-align: center;
 }
 .left .left-queCard .delete {
   position: absolute;
-  width: 20px;
+  width: 18px;
   right: -20px;
   bottom: 0;
 }
@@ -252,9 +395,20 @@ form button {
   gap: 5px;
 }
 .create .left .left-opt-container div {
-  width: 60px;
-  height: 20px;
-  border: 2px solid gray;
+  width: 70px;
+  height: 10px;
+  border: 1px solid rgb(165, 165, 165);
+}
+.create .left .left-img {
+  width: 50px;
+  height: 30px;
+  border: 1px dotted gray;
+  overflow: hidden;
+}
+.create .left .left-img img {
+  width: 50px;
+  height: 30px;
+  object-fit: cover;
 }
 .create .left button {
   background-color: rgb(56, 82, 213);
@@ -267,39 +421,105 @@ form button {
 .create .middle {
   padding: 10px;
   width: 60vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.create .middle form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
 }
 
+.middle form button {
+  background-color: rgb(37, 174, 60);
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #0e701a;
+}
+.middle form .que-input {
+  border-radius: 4px;
+  width: 50vw;
+  font-size: 20px;
+  text-align: center;
+  background-color: white;
+  border: none;
+  outline: none;
+  box-shadow: 0px 4px 0px #bfbfbf;
+}
+.middle .form-image-div {
+  width: 350px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  border-radius: 5px;
+  background-color: white;
+}
+.middle .form-image-div .img-input {
+}
+.middle .form-image-div img {
+  width: 350px;
+  height: 240px;
+  object-fit: cover;
+}
 .middle .options {
   width: 50vw;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 .middle .options input {
   width: 22vw;
+  height: 70px;
+  border-radius: 4px;
+  background-color: rgb(250, 249, 249);
+  border: none;
+  outline: none;
+  box-shadow: 0px 4px 0px #bfbfbf;
 }
 
 .middle .options > div {
   position: relative;
-  border: 1px solid;
 }
 .middle .circle {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
-  border: 3px solid gray;
+  border: 2px solid gray;
   position: absolute;
-  right: 2px;
-  top: 10px;
+  right: 8px;
+  top: 30%;
 }
 
 .create .right {
   padding: 10px;
+  padding-top: 20px;
   width: 20vw;
   background-color: white;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.right input {
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid gray;
+}
+.right select {
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid gray;
 }
 .create .right button {
   background-color: rgb(56, 82, 213);
@@ -308,6 +528,10 @@ form button {
   padding: 5px 15px;
   border-radius: 5px;
   box-shadow: 0px 4px 0px #1f4598;
+}
+.create .right .save-btn {
+  font-size: 20px;
+  margin-top: 20px;
 }
 
 .right .time-limit {
@@ -324,6 +548,15 @@ form button {
   justify-content: flex-start;
   align-items: center;
   background-color: #511999;
+  position: relative;
+}
+.play .copied {
+  background-color: #c65438;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  position: absolute;
+  transition: all ease-in-out;
 }
 .play .room-id-container {
   padding: 10px;
@@ -333,29 +566,45 @@ form button {
 }
 
 .play .room-id-container .id-card {
-  gap: 10px;
-  width: 600px;
+  gap: 15px;
+  width: 700px;
   height: 130px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid;
 }
 .play .id-card .room-id {
   background-color: white;
   display: flex;
   align-items: center;
-  height: 80px;
+  height: 100px;
   font-size: 16px;
-  gap: 10px;
+  gap: 15px;
+  padding: 10px;
   border-radius: 5px;
 }
+.play .room-id .roomId {
+  background-color: #1e1e1fc0;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* .play .qr-code-container {
+  padding: 5px;
+  background-color: white;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
 .play .qr-code {
   /* width: 80px;
   height: 80px; */
   background-color: white;
   border-radius: 5px;
-  transform: scale(45%);
+  transform: scale(40%);
 }
 .play .member-container {
   max-width: 600px;
@@ -563,4 +812,15 @@ form button {
 
 .quiz .your-score p {
   font-size: 25px;
+}
+
+.quiz .save-report {
+  background-color: rgb(70, 69, 69);
+  color: white;
+  margin-top: 10px;
+  padding: 5px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #2f2f2f;
 }

@@ -6,6 +6,7 @@ import { addSocket } from "../slices/userSlice";
 let kahoot;
 let questions = [];
 let i = 0;
+let correctAns = "";
 export default function Quiz() {
   let location = useLocation();
   let id = location?.state?.id;
@@ -19,7 +20,7 @@ export default function Quiz() {
   let [currQues, setCurrQues] = useState("");
   let [options, setOptions] = useState([]);
   let [img, setImg] = useState("");
-  let [correctAns, setCorrectAns] = useState("");
+  //let [correctAns, setCorrectAns] = useState("");
   // let [kahoot, setKahoot] = useState(null);
   let [showCorr, setShowCorr] = useState(false);
   let [name, setName] = useState("");
@@ -29,42 +30,14 @@ export default function Quiz() {
   let [showBoard, setShowBoard] = useState(false);
   let time;
   //let [questions, setQuestions] = useState([]);
-  //socket's
-  socket.on("got-newQue", (data) => {
-    console.log("got", data);
-    setCurrQues(data.currQues);
-    setOptions(data.options);
-    setImg(data.imgUrl);
-    setShowCorr(false);
-    setAnsCount(0);
-    setSelectedOpt(null);
-  });
-  socket.on("answered", ({ ans, memberId }) => {
-    console.log("yess", ans, correctAns);
-    setAnsCount((count) => count + 1);
-    if (ans === correctAns) {
-      socket.emit("correct", { roomId, memberId });
-      console.log(ans);
-    }
-  });
-  socket.on("board", (data) => {
-    let copyBoard = data;
-    copyBoard.sort((a, b) => b.count - a.count);
-    console.log(copyBoard);
-    setBoard(copyBoard);
-    setShowBoard(true);
-  });
 
-  // socket.on("corrAns", () => {
-  //   console.log("yesCor");
-  //   setShowCorr(true);
-  // });
   // functions
   let nextQue = (i) => {
     console.log(i);
     setCurrQues(questions[i]?.ques);
     setOptions(questions[i]?.options);
-    setCorrectAns(questions[i]?.correctAns);
+    // setCorrectAns(() => questions[i]?.correctAns);
+    correctAns = questions[i]?.correctAns;
     setImg(questions[i]?.imgUrl);
     socket.emit("new-que", {
       currQues: questions[i]?.ques,
@@ -111,22 +84,75 @@ export default function Quiz() {
         }
       });
     });
-    console.log(questions);
     time = Number(kahoot.timeLimit) * 1000;
     nextQue(i);
+  };
+  let saveReport = async () => {
+    console.log('board',board)
+    let token = localStorage.getItem("accessToken");
+    try {
+      let resp = await fetch("http://localhost:8000/report/new", {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ kahootId: id, scores: board }),
+      });
+      if (resp.status === 200) {
+        let respData = await resp.json();
+        console.log(respData);
+      } else {
+        let err = await resp.text();
+        alert(err.message);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   useEffect(() => {
     if (!member) {
       load();
     }
-  }, []);
 
-  if (socket !== null) {
-    socket.on("connect", (client) => {
-      console.log("Client connected", client.id);
+    if (socket !== null) {
+      socket.on("connect", (client) => {
+        console.log("Client connected", client.id);
+      });
+    }
+
+    //socket's
+    socket.on("got-newQue", (data) => {
+      console.log("got", data);
+      setCurrQues(data.currQues);
+      setOptions(data.options);
+      setImg(data.imgUrl);
+      setShowCorr(false);
+      setAnsCount(0);
+      setSelectedOpt(null);
     });
-  }
+    socket.on("answered", ({ ans, memberId }) => {
+      console.log(correctAns);
+      console.log("yess", ans, correctAns);
+      setAnsCount((count) => count + 1);
+      if (ans === correctAns) {
+        socket.emit("correct", { roomId, memberId });
+        console.log(ans);
+      }
+    });
+    socket.on("board", (data) => {
+      let copyBoard = data;
+      copyBoard.sort((a, b) => b.count - a.count);
+      console.log(copyBoard);
+      setBoard(copyBoard);
+      setShowBoard(true);
+    });
+    // socket.on("corrAns", () => {
+    //   console.log("yesCor");
+    //   setShowCorr(true);
+    // });
+  }, []);
 
   return (
     <div className="quiz">
@@ -155,7 +181,7 @@ export default function Quiz() {
               {board.map((el) => (
                 <div className="score">
                   <p>{el.name}</p>
-                  <p>{el.count}</p>
+                  <p>{el.count * 20}</p>
                 </div>
               ))}
               {/* <div className="score">
@@ -167,6 +193,7 @@ export default function Quiz() {
                 <p>2</p>
               </div> */}
             </div>
+            <button className="save-report" onClick={()=>saveReport()}>Save Report</button>
           </div>
         )
       ) : (
@@ -219,6 +246,7 @@ export default function Quiz() {
                     <button
                       onClick={() => {
                         if (selectedOpt === null) {
+                          console.log("clicked");
                           setSelectedOpt(el);
                           socket.emit("option-selected", { el, roomId });
                         }

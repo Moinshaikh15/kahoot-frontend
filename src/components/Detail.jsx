@@ -45,17 +45,21 @@ export default function Detail() {
     <div className="detail">
       <div className="kahoot-detail" key={currKahoot._id}>
         <div className="left">
-          <h4>{currKahoot.title}</h4>
-          <button
-            onClick={() => goto(`/play`, { state: { id: currKahoot._id } })}
-          >
-            Start
-          </button>
-          <button
-            onClick={() => goto("/main/create", { state: { currKahoot } })}
-          >
-            Edit
-          </button>
+          <img src="../quiz.jpg" alt="" />
+          <h2>{currKahoot.title}</h2>
+          <div>
+            {" "}
+            <button
+              onClick={() => goto(`/play`, { state: { id: currKahoot._id } })}
+            >
+              Start
+            </button>
+            <button
+              onClick={() => goto("/main/create", { state: { currKahoot } })}
+            >
+              Edit
+            </button>
+          </div>
         </div>
 
         <div className="questions-container">
@@ -65,7 +69,7 @@ export default function Detail() {
               return element === e._id ? (
                 <div key={e._id} className="ques-card">
                   <div>
-                    <p>{e.ques}</p>
+                    <h4>{e.ques}</h4>
                     <div className="options-container">
                       {e.options.map((elem) => (
                         <div key={e._id + elem} className="option">

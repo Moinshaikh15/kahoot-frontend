@@ -1,9 +1,9 @@
-
 import React, { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { deleteQues } from "../slices/userSlice";
-
+// let queId = "";
 export default function Create() {
   let location = useLocation();
   let currKahoot = location?.state?.currKahoot;
@@ -21,6 +21,10 @@ export default function Create() {
   let ref4 = useRef();
   let refTitle = useRef();
   let [type, setType] = useState("quiz");
+  let [editing, setEditing] = useState(false);
+  let [queId, setQueId] = useState("");
+  let [imgURL, setImgURL] = useState("");
+  let [image, setImage] = useState("");
 
   useEffect(() => {
     if (currKahoot) {
@@ -59,7 +63,7 @@ export default function Create() {
         body: JSON.stringify(data),
       });
       if (resp.status === 200) {
-        let respData = await resp.json();
+        let respData = await resp.text();
         console.log(respData);
       } else {
         let err = await resp.text();
@@ -91,7 +95,7 @@ export default function Create() {
       if (resp.status === 200) {
         let respData = await resp.json();
         console.log(respData);
-      goto('/main')
+        goto("/main");
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -124,6 +128,7 @@ export default function Create() {
       ],
       img: newForm.get("img"),
       correctAns,
+      type: type,
     };
     newForm.append("correctAns", correctAns);
     newForm.append("type", type);
@@ -141,6 +146,7 @@ export default function Create() {
         let respData = await resp.json();
 
         setQueIdArr((oldArr) => [...oldArr, respData._id]);
+        setQuestions((oldArr) => [...oldArr, respData]);
         console.log(queIdArr);
       } else {
         let err = await resp.text();
@@ -151,7 +157,7 @@ export default function Create() {
     }
 
     // data = JSON.stringify(data);
-    setQuestions((oldArr) => [...oldArr, data]);
+    // setQuestions((oldArr) => [...oldArr, data]);
     refTitle.current.value = "";
     ref1.current.value = "";
     ref2.current.value = "";
@@ -160,8 +166,62 @@ export default function Create() {
     imgRef.current.value = "";
     queRef.current.value = "";
   };
+  let editQue = async (event) => {
+    let newForm = new FormData(event.target);
+    newForm.append("correctAns", correctAns);
+    newForm.append("type", type);
+    if (newForm.get("img") !== undefined)
+      newForm.append("img", newForm.get("img").file);
+    else newForm.append("imgURL", imgURL);
+    let token = localStorage.getItem("accessToken");
+    // try {
+    //   let resp = await fetch(`http://localhost:8000/que/${queId}/edit`, {
+    //     method: "POST",
+    //     headers: {
+    //       Authorization: "Bearer " + token,
+    //     },
+    //     body: newForm,
+    //   });
+    //   if (resp.status === 200) {
+    //     let respData = await resp.text();
+    //     console.log(respData);
+    //   } else {
+    //     let err = await resp.text();
+    //     alert(err.message);
+    //   }
+    // } catch (err) {
+    //   alert(err.message);
+    // }
+  };
+
   let handleChange = (e) => {
     setTime(e.target.value);
+  };
+  let handleClickQ = (e) => {
+    console.log(e);
+    queRef.current.value = e.ques;
+    ref1.current.value = e.options[0];
+    ref2.current.value = e.options[1];
+    ref3.current.value = e.options[2];
+    ref4.current.value = e.options[3];
+    // imgRef.current.value = e.imgRef ? e.imgUrl : "";
+    setEditing(true);
+    setCorrectAns(e.correctAns);
+    setQueId(e._id);
+    setImgURL(e.imgUrl);
+    //queId = e._id;
+  };
+  let blank = () => {
+    ref1.current.value = "";
+    ref2.current.value = "";
+    ref3.current.value = "";
+    ref4.current.value = "";
+    imgRef.current.value = "";
+    queRef.current.value = "";
+    setEditing(false);
+    setCorrectAns(null);
+    setQueId("");
+    queId = "";
   };
 
   return (
@@ -171,7 +231,7 @@ export default function Create() {
           {questions.map((e) => {
             console.log(e);
             return (
-              <div className="left-queCard">
+              <div className="left-queCard" onClick={() => handleClickQ(e)}>
                 <p>{e.ques}</p>
                 <img
                   style={{ color: "red", cursor: "pointer" }}
@@ -181,13 +241,15 @@ export default function Create() {
                   src={"../delete.png"}
                   className="delete"
                 />
-
+                <div className="left-img">
+                  <img src={e.imgUrl} alt="" />
+                </div>
                 {e.type === "quiz" ? (
                   <div className="left-opt-container">
-                    <div>opt 1</div>
-                    <div>opt 2</div>
-                    <div>opt 3</div>
-                    <div>opt 4</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                   </div>
                 ) : (
                   <div className="left-opt-container">
@@ -198,28 +260,70 @@ export default function Create() {
               </div>
             );
           })}
+          <div className="left-queCard" onClick={() => blank()}>
+            <p>Question</p>
+            {/* <img
+              style={{ color: "red", cursor: "pointer" }}
+              // onClick={() => {
+              //   deleteQ(e._id);
+              // }}
+              src={"../delete.png"}
+              className="delete"
+            /> */}
+            <div className="left-img"></div>
+            {type === "quiz" ? (
+              <div className="left-opt-container">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            ) : (
+              <div className="left-opt-container">
+                <div></div>
+                <div></div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="questions-container"></div>
-        <button>Add Que</button>
+        {/* //<button>Add Que</button> */}
       </div>
       <div className="middle">
-        <form action="" onSubmit={(event) => handleClick(event)}>
+        <form
+          action=""
+          onSubmit={(event) => (!editing ? handleClick(event) : editQue(event))}
+        >
           <input
             type="text"
             placeholder="What is your Question"
             id="ques"
             name="ques"
             ref={queRef}
+            className="que-input"
           />
-          <label htmlFor="img">Select image:</label>
-          <input
-            type="file"
-            id="img"
-            name="img"
-            accept="image/*"
-            ref={imgRef}
-          />
+
+          <div className="form-image-div">
+            <input
+              type="file"
+              id="img"
+              name="img"
+              accept="image/*"
+              ref={imgRef}
+              className="img-input"
+              onChange={(event) => {
+                if (event.target.files && event.target.files[0]) {
+                  setImage(() => URL.createObjectURL(event.target.files[0]));
+                }
+              }}
+            />
+            {image !== "" ? (
+              <img src={image} alt="your image" />
+            ) : (
+              <label htmlFor="img">Insert Image</label>
+            )}
+          </div>
 
           {type === "quiz" ? (
             <div className="options">
@@ -325,7 +429,9 @@ export default function Create() {
                   className="circle"
                   style={{
                     backgroundColor:
-                      ref2.current?.value === correctAns ? "green" : "",
+                      ref2.current?.value === correctAns
+                        ? "rgb(37, 174, 60)"
+                        : "",
                   }}
                   onClick={() => setCorrectAns(ref2.current.value)}
                 ></div>
@@ -337,11 +443,8 @@ export default function Create() {
         </form>
       </div>
       <div className="right">
-        <label htmlFor="title">Kahoot Title</label>
+        <label htmlFor="title" style={{fontSize:'20px'}}>Kahoot Title</label>
         <input type="text" name="title" id="title" ref={refTitle} />
-        <button onClick={() => (currKahoot ? editKahoot() : createKahoot())}>
-          Save
-        </button>
         <div className="time-limit">
           <label htmlFor="time">Time Limit/Que</label>
           <select id="time" name="time" onChange={(e) => handleChange(e)}>
@@ -364,6 +467,13 @@ export default function Create() {
           <option value="quiz">Quiz</option>
           <option value="trueNfalse">True or false</option>
         </select>
+
+        <button
+          onClick={() => (currKahoot ? editKahoot() : createKahoot())}
+          className="save-btn"
+        >
+          Save Quiz
+        </button>
       </div>
     </div>
   );

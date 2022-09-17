@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 export default function Main() {
   let dispatch = useDispatch();
+  let { userInfo } = useSelector((state) => state.user);
   let getKahoots = async () => {
     let token = localStorage.getItem("accessToken");
     try {
@@ -35,10 +36,20 @@ export default function Main() {
 
   return (
     <div>
-      <Header />
-      <div className="outlet">
-        <Outlet />
-      </div>
+      {userInfo ? (
+        <>
+          <Header />
+          <div className="outlet">
+            <Outlet />
+          </div>
+        </>
+      ) : (
+        <div className="loading-container">
+          <div className="loading">
+            <div className="square"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

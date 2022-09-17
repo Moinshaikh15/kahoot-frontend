@@ -23,6 +23,7 @@ export default function Home() {
       if (resp.status === 200) {
         let data = await resp.json();
         dispatch(setQues(data));
+        console.log(data);
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -35,7 +36,7 @@ export default function Home() {
     <div className="home">
       <div className="kahoots-container">
         <button onClick={() => goto("/main/create")}>Create</button>
-        <h4>My Kahoots</h4>
+        <h3>My Kahoots</h3>
         <div className="kahoots-card-container">
           {kahoots.map((el) =>
             el.creator === userInfo._id ? (
@@ -44,16 +45,24 @@ export default function Home() {
                 className="kahoot-card"
                 onClick={() => goto(`/main/${el._id}`)}
               >
-                <h5>{el.title}</h5>
+                <div className="kahoot-title-card">
+                  <img src="../quiz.jpg" alt="" />
+                  <div className="kahoot-title">
+                    <h4>{el.title}</h4>
+                    <p>{el.questions.length} Questions</p>
+                  </div>
+                </div>
+
                 <div>
-                  <button
+                  <img
                     onClick={(e) => {
                       e.stopPropagation();
                       goto(`/main/create`, { state: { currKahoot: el } });
                     }}
-                  >
-                    Edit
-                  </button>
+                    src="../edit.png"
+                    className="edit-img"
+                  />
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
