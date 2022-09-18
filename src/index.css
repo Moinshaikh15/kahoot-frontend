@@ -158,7 +158,10 @@ form button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top: 10px;
+  padding: 10px;
+}
+.home .kahoots-container h3 {
+  font-size: 22px;
 }
 .kahoots-container > button {
   position: absolute;
@@ -176,7 +179,8 @@ form button {
   flex-direction: column;
   gap: 10px;
   width: 80vw;
-  padding: 20px 10px;
+  /* padding: 20px 10px; */
+  padding-top: 20px;
 }
 
 .kahoot-card {
@@ -264,10 +268,14 @@ form button {
   padding: 5px 15px;
   border-radius: 5px;
   font-size: 16px;
-  font-weight: 700;
+  /* font-weight: 700; */
   box-shadow: 0px 4px 0px #1f4598;
   margin-right: 10px;
   margin-top: 10px;
+}
+.kahoot-detail .left .delete {
+  background-color: rgb(213, 61, 56);
+  box-shadow: 0px 4px 0px #98251f;
 }
 .kahoot-detail .left img {
   width: 24vw;
@@ -507,12 +515,18 @@ form button {
   background-color: white;
   display: flex;
   flex-direction: column;
+  gap: 50px;
+}
+.create .right > div {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 .right input {
   padding: 5px;
   border-radius: 5px;
   outline: none;
+  font-size: 18px;
   border: 1px solid gray;
 }
 .right select {
@@ -534,7 +548,7 @@ form button {
   margin-top: 20px;
 }
 
-.right .time-limit {
+.right .drop-downs {
   display: flex;
   flex-direction: column;
 }
@@ -690,17 +704,41 @@ form button {
   position: relative;
   background-color: #6f31c1;
 }
+.quiz .timer {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  right: 60px;
+  top: 60px;
+  overflow: hidden;
+}
+.quiz .timer div {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #3a13636c;
+}
+.quiz .timer p {
+  position: relative;
+  margin: 20px;
+  font-size: 20px;
+  z-index: 2;
+  color: white;
+}
 .quiz .next {
   position: absolute;
   right: 20px;
   top: 10px;
-  background-color: rgb(114, 111, 111);
+  background-color: rgb(4, 108, 245);
   color: white;
   padding: 5px;
   font-size: 18px;
   border: none;
   border-radius: 5px;
-  box-shadow: 0px 4px 0px #4d4d4d;
+  box-shadow: 0px 4px 0px #1c139f;
 }
 .quiz .title {
   position: absolute;
@@ -724,9 +762,15 @@ form button {
   align-items: center;
   gap: 10px;
 }
+.quiz .ques .question {
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 2px #aea9a9;
+}
 .quiz .ques h3 {
-  font-size: 40px;
-  color: white;
+  font-size: 28px;
+  /* color: white; */
 }
 .quiz img {
   width: 200px;
@@ -740,24 +784,24 @@ form button {
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  border: 1px solid;
   padding: 10px;
 }
 .quiz .option button {
-  background-color: rgb(247, 246, 249);
-  /* box-shadow: 0px 4px 0px #531f98; */
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 700;
-  color: rgb(49, 58, 178);
   width: 30vh;
-  height: 50px;
+  height:60px;
   border: none;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgb(47, 55, 93);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 0px #1c252d;
 }
+
 .quiz .overview {
   position: absolute;
   left: 10px;

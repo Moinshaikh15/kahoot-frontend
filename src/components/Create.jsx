@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { deleteQues } from "../slices/userSlice";
 // let queId = "";
 export default function Create() {
   let location = useLocation();
   let currKahoot = location?.state?.currKahoot;
-  let goto = useDispatch();
+  let goto = useNavigate();
   let { userInfo, ques } = useSelector((state) => state.user);
   let [questions, setQuestions] = useState([]);
   let [time, setTime] = useState(20);
@@ -25,7 +25,10 @@ export default function Create() {
   let [queId, setQueId] = useState("");
   let [imgURL, setImgURL] = useState("");
   let [image, setImage] = useState("");
-
+  let [score, setScore] = useState(10);
+  let typeDrop = useRef();
+  let scoreDrop = useRef();
+  let timeDrop = useRef();
   useEffect(() => {
     if (currKahoot) {
       setQuestions([]);
@@ -132,7 +135,10 @@ export default function Create() {
     };
     newForm.append("correctAns", correctAns);
     newForm.append("type", type);
+    newForm.append("timeLimit", time);
+    newForm.append("score", score);
     newForm.append("img", newForm.get("img").file);
+
     let token = localStorage.getItem("accessToken");
     try {
       let resp = await fetch("http://localhost:8000/que/new", {
@@ -165,37 +171,57 @@ export default function Create() {
     ref4.current.value = "";
     imgRef.current.value = "";
     queRef.current.value = "";
+    setImage("");
   };
   let editQue = async (event) => {
     let newForm = new FormData(event.target);
     newForm.append("correctAns", correctAns);
     newForm.append("type", type);
-    if (newForm.get("img") !== undefined)
+
+    console.log(newForm.get("img").name);
+    if (newForm.get("img").name !== "")
       newForm.append("img", newForm.get("img").file);
     else newForm.append("imgURL", imgURL);
+    let data = {
+      ques: newForm.get("ques"),
+      options: [
+        newForm.get("one"),
+        newForm.get("two"),
+        newForm.get("three"),
+        newForm.get("four"),
+      ],
+      img: newForm.get("img"),
+      imgURL: newForm.get("imgURL"),
+      correctAns: newForm.get("correctAns"),
+      type: newForm.get("type"),
+    };
+    console.log(data);
     let token = localStorage.getItem("accessToken");
-    // try {
-    //   let resp = await fetch(`http://localhost:8000/que/${queId}/edit`, {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: "Bearer " + token,
-    //     },
-    //     body: newForm,
-    //   });
-    //   if (resp.status === 200) {
-    //     let respData = await resp.text();
-    //     console.log(respData);
-    //   } else {
-    //     let err = await resp.text();
-    //     alert(err.message);
-    //   }
-    // } catch (err) {
-    //   alert(err.message);
-    // }
+    try {
+      let resp = await fetch(`http://localhost:8000/que/${queId}/edit`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: newForm,
+      });
+      if (resp.status === 200) {
+        let respData = await resp.text();
+        console.log(respData);
+      } else {
+        let err = await resp.text();
+        alert(err.message);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   let handleChange = (e) => {
     setTime(e.target.value);
+  };
+  let handleChangeScore = (e) => {
+    setScore(e.target.value);
   };
   let handleClickQ = (e) => {
     console.log(e);
@@ -204,11 +230,17 @@ export default function Create() {
     ref2.current.value = e.options[1];
     ref3.current.value = e.options[2];
     ref4.current.value = e.options[3];
+    typeDrop.current.value = e.type;
+    scoreDrop.current.value = e.score;
+    timeDrop.current.value = e.timeLimit;
     // imgRef.current.value = e.imgRef ? e.imgUrl : "";
     setEditing(true);
     setCorrectAns(e.correctAns);
     setQueId(e._id);
     setImgURL(e.imgUrl);
+    setImage(e.imgUrl);
+    setType(e.type);
+
     //queId = e._id;
   };
   let blank = () => {
@@ -216,8 +248,11 @@ export default function Create() {
     ref2.current.value = "";
     ref3.current.value = "";
     ref4.current.value = "";
-    imgRef.current.value = "";
+    // imgRef.current.value = "";
     queRef.current.value = "";
+    typeDrop.current.value = "quiz";
+    scoreDrop.current.value = "10";
+    timeDrop.current.value = "20";
     setEditing(false);
     setCorrectAns(null);
     setQueId("");
@@ -226,6 +261,7 @@ export default function Create() {
 
   return (
     <div className="create">
+      {/*------------------------- left container ----------------------*/}
       <div className="left">
         <div>
           {questions.map((e) => {
@@ -253,8 +289,8 @@ export default function Create() {
                   </div>
                 ) : (
                   <div className="left-opt-container">
-                    <div>true</div>
-                    <div>false</div>
+                    <div></div>
+                    <div></div>
                   </div>
                 )}
               </div>
@@ -290,10 +326,15 @@ export default function Create() {
         <div className="questions-container"></div>
         {/* //<button>Add Que</button> */}
       </div>
+      {/*------------------------- left container ----------------------*/}
+      {/*------------------------- Middle container ----------------------*/}
       <div className="middle">
         <form
           action=""
-          onSubmit={(event) => (!editing ? handleClick(event) : editQue(event))}
+          onSubmit={(event) => {
+            event.preventDefault();
+            !editing ? handleClick(event) : editQue(event);
+          }}
         >
           <input
             type="text"
@@ -442,39 +483,73 @@ export default function Create() {
           <button type="submit">Save Que</button>
         </form>
       </div>
+      {/*------------------------- Middle container ----------------------*/}
+      {/*------------------------- Right container ----------------------*/}
       <div className="right">
-        <label htmlFor="title" style={{fontSize:'20px'}}>Kahoot Title</label>
-        <input type="text" name="title" id="title" ref={refTitle} />
-        <div className="time-limit">
-          <label htmlFor="time">Time Limit/Que</label>
-          <select id="time" name="time" onChange={(e) => handleChange(e)}>
-            <option value="20">20s</option>
-            <option value="40">40s</option>
-            <option value="90">1m 30s</option>
-            <option value="120">2m</option>
-          </select>
+        <div>
+          <div className="drop-downs">
+            <label htmlFor="time">Score/Que</label>
+            <select
+              id="time"
+              name="time"
+              onChange={(e) => handleChangeScore(e)}
+              ref={scoreDrop}
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div className="drop-downs">
+            <label htmlFor="time">Time Limit/Que</label>
+            <select
+              id="time"
+              name="time"
+              onChange={(e) => handleChange(e)}
+              ref={timeDrop}
+            >
+              <option value="20">20s</option>
+              <option value="40">40s</option>
+              <option value="90">1m 30s</option>
+              <option value="120">2m</option>
+            </select>
+          </div>
+          <div className="drop-downs">
+            <label htmlFor="time">Type</label>
+            <select
+              id="time"
+              name="time"
+              onChange={(e) => {
+                ref1.current.value = "";
+                ref2.current.value = "";
+                setType(e.target.value);
+              }}
+              ref={typeDrop}
+            >
+              <option value="quiz">Quiz</option>
+              <option value="trueNfalse">True or false</option>
+            </select>
+          </div>
         </div>
-        <label htmlFor="time">Type</label>
-        <select
-          id="time"
-          name="time"
-          onChange={(e) => {
-            ref1.current.value = "";
-            ref2.current.value = "";
-            setType(e.target.value);
-          }}
-        >
-          <option value="quiz">Quiz</option>
-          <option value="trueNfalse">True or false</option>
-        </select>
+        <div>
+          <label
+            htmlFor="title"
+            style={{ fontSize: "20px", fontWeight: "700" }}
+          >
+            Quiz Title
+          </label>
+          <input type="text" name="title" id="title" ref={refTitle} />
 
-        <button
-          onClick={() => (currKahoot ? editKahoot() : createKahoot())}
-          className="save-btn"
-        >
-          Save Quiz
-        </button>
+          <button
+            onClick={() => (currKahoot ? editKahoot() : createKahoot())}
+            className="save-btn"
+          >
+            Save Quiz
+          </button>
+        </div>
       </div>
+      {/*------------------------- Right container ----------------------*/}
     </div>
   );
 }

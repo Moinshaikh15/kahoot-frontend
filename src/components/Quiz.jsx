@@ -28,7 +28,9 @@ export default function Quiz() {
   let [selectedOpt, setSelectedOpt] = useState(null);
   let [board, setBoard] = useState([]);
   let [showBoard, setShowBoard] = useState(false);
-  let time;
+  let [queTime, setQueTime] = useState(20);
+  let [time, setTime] = useState(20);
+  let [queScore, setQueScore] = useState(10);
   //let [questions, setQuestions] = useState([]);
 
   // functions
@@ -43,6 +45,8 @@ export default function Quiz() {
       currQues: questions[i]?.ques,
       options: questions[i]?.options,
       imgUrl: questions[i]?.imgUrl,
+      score: questions[i]?.score,
+      queTime: questions[i]?.timeLimit,
     });
 
     if (i >= kahoot.questions.length) {
@@ -68,6 +72,19 @@ export default function Quiz() {
     //   });
     // }, time);
   };
+  let startTimer = () => {
+    let timeInterval = setInterval(() => {
+      if (time >= 0) {
+        setTime((time) => (time -= 1));
+      }
+      if (time <= 0) {
+        clearInterval(timeInterval);
+      }
+      return () => {
+        clearInterval(timeInterval);
+      };
+    }, 1000);
+  };
 
   let load = () => {
     kahoots.map((e) => {
@@ -84,11 +101,11 @@ export default function Quiz() {
         }
       });
     });
-    time = Number(kahoot.timeLimit) * 1000;
+    // time = Number(kahoot.timeLimit) * 1000;
     nextQue(i);
   };
   let saveReport = async () => {
-    console.log('board',board)
+    console.log("board", board);
     let token = localStorage.getItem("accessToken");
     try {
       let resp = await fetch("http://localhost:8000/report/new", {
@@ -114,6 +131,7 @@ export default function Quiz() {
   useEffect(() => {
     if (!member) {
       load();
+      startTimer();
     }
 
     if (socket !== null) {
@@ -128,16 +146,19 @@ export default function Quiz() {
       setCurrQues(data.currQues);
       setOptions(data.options);
       setImg(data.imgUrl);
+      setQueScore(data.score);
       setShowCorr(false);
+      setQueTime(data.queTime);
       setAnsCount(0);
       setSelectedOpt(null);
+      startTimer();
     });
     socket.on("answered", ({ ans, memberId }) => {
       console.log(correctAns);
       console.log("yess", ans, correctAns);
-      setAnsCount((count) => count + 1);
+      setAnsCount((AnsCount) => AnsCount + 1);
       if (ans === correctAns) {
-        socket.emit("correct", { roomId, memberId });
+        socket.emit("correct", { roomId, memberId, queScore });
         console.log(ans);
       }
     });
@@ -163,16 +184,12 @@ export default function Quiz() {
               if (el.name === playerName) {
                 return (
                   <div className="my-score">
-                    <h1>{el.count * 20}</h1>
+                    <h1>{el.count}</h1>
                     <p>Your Score</p>
                   </div>
                 );
               }
             })}
-            {/* <div className="my-score">
-              <h1>799</h1>
-              <p>Your Score</p>
-            </div> */}
           </div>
         ) : (
           <div>
@@ -181,19 +198,13 @@ export default function Quiz() {
               {board.map((el) => (
                 <div className="score">
                   <p>{el.name}</p>
-                  <p>{el.count * 20}</p>
+                  <p>{el.count}</p>
                 </div>
               ))}
-              {/* <div className="score">
-                <p>Moin</p>
-                <p>2</p>
-              </div>
-              <div className="score">
-                <p>Moin</p>
-                <p>2</p>
-              </div> */}
             </div>
-            <button className="save-report" onClick={()=>saveReport()}>Save Report</button>
+            <button className="save-report" onClick={() => saveReport()}>
+              Save Report
+            </button>
           </div>
         )
       ) : (
@@ -237,38 +248,49 @@ export default function Quiz() {
               <h4>Waiting for Quiz to Start</h4>
             </div>
           ) : (
-            <div className="ques">
-              <h3>{currQues}</h3>
-              {img !== "" ? <img src={img} alt="" /> : ""}
-              <div className="option">
-                {options?.map((el) => (
-                  <div>
-                    <button
-                      onClick={() => {
-                        if (selectedOpt === null) {
-                          console.log("clicked");
-                          setSelectedOpt(el);
-                          socket.emit("option-selected", { el, roomId });
-                        }
-                      }}
-                      style={{
-                        backgroundColor: selectedOpt === el ? "black" : "",
-                        color: selectedOpt === el ? "white" : "",
-                      }}
-                    >
-                      {el}
-                    </button>
-                  </div>
-                ))}
+            <>
+              <div className="timer">
+                <div>
+                  <p>{time}</p>
+                </div>
               </div>
-              {/* {member ? (
+
+              <div className="ques">
+                <div className="question">
+                  <h3>{currQues}</h3>
+                </div>
+
+                {img !== "" ? <img src={img} alt="" /> : ""}
+                <div className="option">
+                  {options?.map((el) => (
+                    <div>
+                      <button
+                        onClick={() => {
+                          if (selectedOpt === null) {
+                            console.log("clicked");
+                            setSelectedOpt(el);
+                            socket.emit("option-selected", { el, roomId });
+                          }
+                        }}
+                        style={{
+                          backgroundColor: selectedOpt === el ? "black" : "",
+                          color: selectedOpt === el ? "white" : "",
+                        }}
+                      >
+                        {el}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {/* {member ? (
             <div style={{ display: showCorr ? "flex" : "none" }}>
               <p>Correct Answer</p>
             </div>
           ) : (
             ""
           )} */}
-            </div>
+              </div>
+            </>
           )}
         </>
       )}

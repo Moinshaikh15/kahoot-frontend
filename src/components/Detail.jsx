@@ -15,6 +15,27 @@ export default function Detail() {
       currKahoot = e;
     }
   });
+  let deleteKahoot = async () => {
+    let token = localStorage.getItem("accessToken");
+    try {
+      let resp = await fetch(`http://localhost:8000/kahoot/${id}`, {
+        method: "DELETE",
+        headers: {
+          "content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (resp.status === 200) {
+        let respData = await resp.text();
+        console.log(respData);
+      } else {
+        let err = await resp.text();
+        alert(err.message);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   // useEffect(() => {
   //   getQue();
@@ -59,6 +80,15 @@ export default function Detail() {
             >
               Edit
             </button>
+            <button
+              onClick={() => {
+                deleteKahoot();
+                goto("/main");
+              }}
+              className="delete"
+            >
+              Delete
+            </button>
           </div>
         </div>
 
@@ -71,11 +101,14 @@ export default function Detail() {
                   <div>
                     <h4>{e.ques}</h4>
                     <div className="options-container">
-                      {e.options.map((elem) => (
-                        <div key={e._id + elem} className="option">
-                          <p>{elem}</p>
-                        </div>
-                      ))}
+                      {e.options.map((elem) => {
+                        if (elem !== null)
+                          return (
+                            <div key={e._id + elem} className="option">
+                              <p>{elem}</p>
+                            </div>
+                          );
+                      })}
                     </div>
                   </div>
                   <img src={e.imgUrl} alt="" />

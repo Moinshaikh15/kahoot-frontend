@@ -59,7 +59,10 @@ export default function Play() {
 
   return (
     <div className="play">
-      <div className="copied" style={{ display: isCopied===true ? "flex" : "none" }}>
+      <div
+        className="copied"
+        style={{ display: isCopied === true ? "flex" : "none" }}
+      >
         <p>Copied</p>
       </div>
       <div className="room-id-container">
@@ -82,7 +85,13 @@ export default function Play() {
                   {roomId}
                 </p>
               ) : (
-                ""
+                <p
+                  style={{ fontSize: "24px", fontWeight: "700" }}
+                  className="roomId"
+                  onClick={() => handleCopyClick(roomId)}
+                >
+                  loading Pin...
+                </p>
               )}
             </div>
           </div>
