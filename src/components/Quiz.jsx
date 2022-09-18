@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
+import Leader from "./Leader";
 let kahoot;
 let questions = [];
 let i = 0;
@@ -32,7 +33,7 @@ export default function Quiz() {
   let [time, setTime] = useState(20);
   let [queScore, setQueScore] = useState(10);
   //let [questions, setQuestions] = useState([]);
-
+  let [showLeaderBoard, setShowLeaderBoard] = useState(true);
   // functions
   let nextQue = (i) => {
     console.log(i);
@@ -168,6 +169,9 @@ export default function Quiz() {
       console.log(copyBoard);
       setBoard(copyBoard);
       setShowBoard(true);
+      setTimeout(() => {
+        setShowLeaderBoard(false);
+      }, 20000);
     });
     // socket.on("corrAns", () => {
     //   console.log("yesCor");
@@ -178,35 +182,45 @@ export default function Quiz() {
   return (
     <div className="quiz">
       {showBoard ? (
-        member ? (
-          <div className="your-score">
-            {board.map((el) => {
-              if (el.name === playerName) {
-                return (
-                  <div className="my-score">
-                    <h1>{el.count}</h1>
-                    <p>Your Score</p>
-                  </div>
-                );
-              }
-            })}
-          </div>
-        ) : (
-          <div>
-            <p style={{ color: "white", fontSize: "22px" }}>Score Board</p>
-            <div className="scoreBoard">
-              {board.map((el) => (
-                <div className="score">
-                  <p>{el.name}</p>
-                  <p>{el.count}</p>
+        <>
+          {showLeaderBoard ? (
+            <Leader board={board}/>
+          ) : (
+            <>
+              {member ? (
+                <div className="your-score">
+                  {board.map((el) => {
+                    if (el.name === playerName) {
+                      return (
+                        <div className="my-score">
+                          <h1>{el.count}</h1>
+                          <p>Your Score</p>
+                        </div>
+                      );
+                    }
+                  })}
                 </div>
-              ))}
-            </div>
-            <button className="save-report" onClick={() => saveReport()}>
-              Save Report
-            </button>
-          </div>
-        )
+              ) : (
+                <div>
+                  <p style={{ color: "white", fontSize: "22px" }}>
+                    Score Board
+                  </p>
+                  <div className="scoreBoard">
+                    {board.map((el) => (
+                      <div className="score">
+                        <p>{el.name}</p>
+                        <p>{el.count}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="save-report" onClick={() => saveReport()}>
+                    Save Report
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </>
       ) : (
         <>
           {member ? (
@@ -217,7 +231,6 @@ export default function Quiz() {
             <button
               onClick={() => {
                 i++;
-                console.log(i);
                 nextQue(i);
               }}
               className="next"
@@ -226,16 +239,17 @@ export default function Quiz() {
             </button>
           )}
 
-          <h2 className="title">{kahoot?.title}</h2>
-          <div className="timer"></div>
+          {/* <h2 className="title">{kahoot?.title}</h2>
+          <div className="timer"></div> */}
 
           {!member ? (
             <div className="overview">
-              {options?.map((el) => (
+              {/* {options?.map((el) => (
                 <div className="opt">
                   <p>{el}</p> <p></p>
                 </div>
-              ))}
+              ))} */}
+              <p className="opt">Members Answered</p>
               <p className="opt" style={{ width: "40px" }}>
                 {ansCount}/{totalMember}
               </p>
@@ -273,7 +287,8 @@ export default function Quiz() {
                           }
                         }}
                         style={{
-                          backgroundColor: selectedOpt === el ? "black" : "",
+                          backgroundColor:
+                            selectedOpt === el ? "rgb(37, 39, 50)" : "",
                           color: selectedOpt === el ? "white" : "",
                         }}
                       >

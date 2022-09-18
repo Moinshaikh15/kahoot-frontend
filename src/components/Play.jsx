@@ -113,7 +113,7 @@ export default function Play() {
             })
           }
         >
-          start
+          Start
         </button>
 
         <div className="member-container">

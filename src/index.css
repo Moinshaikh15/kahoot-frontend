@@ -570,11 +570,12 @@ form button {
   padding: 5px 10px;
   border-radius: 5px;
   position: absolute;
+  top: 2px;
   transition: all ease-in-out;
 }
 .play .room-id-container {
   padding: 10px;
-  height: 20vh;
+  height: 22vh;
   display: flex;
   gap: 20px;
 }
@@ -645,13 +646,13 @@ form button {
 .play .bottom button {
   position: absolute;
   right: 20px;
-  background-color: rgb(180, 176, 176);
-  padding: 5px;
-  font-size: 18px;
+  background-color: rgb(238, 236, 236);
+  padding: 5px 10px;
+  font-size: 20px;
   font-weight: 700;
   border: none;
   border-radius: 5px;
-  box-shadow: 0px 4px 0px #868585;
+  box-shadow: 0px 4px 0px #aaaaaa;
 }
 /* player */
 .player {
@@ -732,13 +733,13 @@ form button {
   position: absolute;
   right: 20px;
   top: 10px;
-  background-color: rgb(4, 108, 245);
-  color: white;
+  background-color: rgb(244, 244, 246);
+  /* color: white; */
   padding: 5px;
   font-size: 18px;
   border: none;
   border-radius: 5px;
-  box-shadow: 0px 4px 0px #1c139f;
+  box-shadow: 0px 4px 0px #939394;
 }
 .quiz .title {
   position: absolute;
@@ -790,7 +791,7 @@ form button {
   font-size: 34px;
   font-weight: 700;
   width: 30vh;
-  height:60px;
+  height: 60px;
   border: none;
   display: flex;
   justify-content: center;
@@ -805,7 +806,7 @@ form button {
 .quiz .overview {
   position: absolute;
   left: 10px;
-  top: 50px;
+  top: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -816,7 +817,6 @@ form button {
   background-color: white;
   padding: 5px;
   border-radius: 2px;
-  width: 20px;
 }
 
 .quiz .scoreBoard {
@@ -868,3 +868,82 @@ form button {
   border-radius: 5px;
   box-shadow: 0px 4px 0px #2f2f2f;
 }
+
+.quiz .leaderBoard {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.leaderBoard .middle-box {
+  width: 600px;
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.leaderBoard .middle-box .first {
+  width: 100px;
+  height: 400px;
+  background-color: #391d8cd0;
+  border-radius: 5px;
+  box-shadow: 0px 3px 11px 0px #060740;
+  z-index: 1;
+  opacity: 0;
+  animation: slideUp 1s ease-in-out 5s;
+  animation-fill-mode: forwards;
+  position: relative;
+}
+.middle-box .first div {
+  width: 100%;
+  height: 200px;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+}
+.leaderBoard .middle-box .second {
+  width: 100px;
+  height: 330px;
+  background-color: #391d8cd0;
+  border-radius: 5px;
+  opacity: 0;
+  animation: slideUp 1s ease-in-out 2s;
+  animation-fill-mode: forwards;
+  position: relative;
+}
+.leaderBoard .middle-box .third {
+  width: 100px;
+  height: 300px;
+  background-color: #391d8cd0;
+  border-radius: 5px;
+  opacity: 0;
+  animation: slideUp 1s ease-in-out;
+  animation-fill-mode: forwards;
+  position: relative;
+}
+.middle-box .name1 {
+  position: absolute;
+  top: -30px;
+  left: 25%;
+  font-size: 18px;
+  color: white;
+  font-weight: 700;
+}
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+} ;
