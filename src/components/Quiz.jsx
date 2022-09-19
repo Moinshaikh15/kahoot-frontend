@@ -179,7 +179,7 @@ export default function Quiz() {
       console.log(copyBoard);
       setBoard(copyBoard);
       setShowBoard(true);
-      //saveReport();
+      saveReport();
       setTimeout(() => {
         setShowLeaderBoard(false);
       }, 20000);
