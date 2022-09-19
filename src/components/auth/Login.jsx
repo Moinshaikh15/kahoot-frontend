@@ -9,7 +9,7 @@ export default function Login() {
   let dispatch = useDispatch();
   let logIn = async (obj) => {
     try {
-      let resp = await fetch("http://localhost:8000/auth/login", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/auth/login", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

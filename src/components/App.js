@@ -18,7 +18,7 @@ export default function App() {
   let getKahoots = async () => {
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch("http://localhost:8000/kahoot/", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/kahoot/", {
         method: "GET",
         headers: {
           "content-Type": "application/json",

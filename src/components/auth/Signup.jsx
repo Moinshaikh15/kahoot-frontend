@@ -7,7 +7,7 @@ export default function Signup() {
   let goto = useDispatch();
   let signup = async (obj) => {
     try {
-      let resp = await fetch("http://localhost:8000/auth/signup", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/auth/signup", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

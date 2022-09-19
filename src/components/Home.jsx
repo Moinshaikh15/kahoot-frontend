@@ -15,7 +15,7 @@ export default function Home() {
   let getQue = async () => {
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch(`http://localhost:8000/que/`, {
+      let resp = await fetch(`https://quizzo-ms.herokuapp.com/que/`, {
         method: "GET",
         headers: {
           "content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function Home() {
   let getReports = async () => {
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch(`http://localhost:8000/report/`, {
+      let resp = await fetch(`https://quizzo-ms.herokuapp.com/report/`, {
         method: "GET",
         headers: {
           "content-Type": "application/json",

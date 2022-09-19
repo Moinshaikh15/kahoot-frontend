@@ -59,18 +59,22 @@ export default function Create({ getKahoots }) {
     let id = currKahoot._id;
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch(`http://localhost:8000/kahoot/${id}/edit`, {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(data),
-      });
+      let resp = await fetch(
+        `https://quizzo-ms.herokuapp.com/kahoot/${id}/edit`,
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(data),
+        }
+      );
       if (resp.status === 200) {
         let respData = await resp.text();
         getKahoots();
         console.log(respData);
+        goto("/main");
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -91,7 +95,7 @@ export default function Create({ getKahoots }) {
 
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch("http://localhost:8000/kahoot/new", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/kahoot/new", {
         method: "POST",
         headers: {
           "content-Type": "application/json",
@@ -148,7 +152,7 @@ export default function Create({ getKahoots }) {
 
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch("http://localhost:8000/que/new", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/que/new", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + token,
@@ -171,7 +175,6 @@ export default function Create({ getKahoots }) {
 
     // data = JSON.stringify(data);
     // setQuestions((oldArr) => [...oldArr, data]);
-    refTitle.current.value = "";
     ref1.current.value = "";
     ref2.current.value = "";
     ref3.current.value = "";
@@ -206,13 +209,16 @@ export default function Create({ getKahoots }) {
     console.log(data);
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch(`http://localhost:8000/que/${queId}/edit`, {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        body: newForm,
-      });
+      let resp = await fetch(
+        `https://quizzo-ms.herokuapp.com/que/${queId}/edit`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          body: newForm,
+        }
+      );
       if (resp.status === 200) {
         let respData = await resp.text();
         console.log(respData);

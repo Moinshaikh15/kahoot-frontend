@@ -18,7 +18,7 @@ export default function Detail({ getKahoots }) {
   let deleteKahoot = async () => {
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch(`http://localhost:8000/kahoot/${id}`, {
+      let resp = await fetch(`https://quizzo-ms.herokuapp.com/kahoot/${id}`, {
         method: "DELETE",
         headers: {
           "content-Type": "application/json",
@@ -38,31 +38,7 @@ export default function Detail({ getKahoots }) {
     }
   };
 
-  // useEffect(() => {
-  //   getQue();
-  // }, []);
-  // let getQue = async () => {
-  //   let token = localStorage.getItem("accessToken");
-  //   try {
-  //     let resp = await fetch(`http://localhost:8000/que/`, {
-  //       method: "GET",
-  //       headers: {
-  //         "content-Type": "application/json",
-  //         Authorization: "Bearer " + token,
-  //       },
-  //     });
-  //     if (resp.status === 200) {
-  //       let data = await resp.json();
-  //       dispatch(setQues(data));
-  //     } else {
-  //       let err = await resp.text();
-  //       alert(err.message);
-  //     }
-  //   } catch (err) {
-  //     alert(err.message);
-  //   }
-  // };
-  // console.log(currKahoot, ques);
+ 
   return (
     <div className="detail">
       <div className="kahoot-detail" key={currKahoot._id}>

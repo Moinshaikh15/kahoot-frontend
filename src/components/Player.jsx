@@ -11,7 +11,7 @@ export default function Player() {
   let dispatch = useDispatch();
   let goto = useNavigate();
   useEffect(() => {
-    const newSocket = io("http://localhost:8000");
+    const newSocket = io("https://quizzo-ms.herokuapp.com/");
     dispatch(addSocket(newSocket));
   }, []);
   socket?.on("valid", () => {

@@ -113,7 +113,7 @@ export default function Quiz() {
     console.log("board", board);
     let token = localStorage.getItem("accessToken");
     try {
-      let resp = await fetch("http://localhost:8000/report/new", {
+      let resp = await fetch("https://quizzo-ms.herokuapp.com/report/new", {
         method: "POST",
         headers: {
           "content-Type": "application/json",

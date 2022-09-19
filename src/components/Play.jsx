@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
 import QRCode from "react-qr-code";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
+// let roomId2=''
 export default function Play() {
   let location = useLocation();
   let id = location?.state?.id;
@@ -15,7 +16,7 @@ export default function Play() {
   let [usersJoined, setUsersJoined] = useState([]);
   let [isCopied, setIsCopied] = useState(FOCUSABLE_SELECTOR);
   useEffect(() => {
-    const newSocket = io("http://localhost:8000");
+    const newSocket = io("https://quizzo-ms.herokuapp.com/");
     dispatch(addSocket(newSocket));
 
     socket?.emit("New-Room");
@@ -25,7 +26,7 @@ export default function Play() {
       });
 
       socket?.on("new-id", (id) => {
-        setRoomId(id);
+        setRoomId(() => id);
       });
     }
     socket?.on("member-joined", (data) => {
