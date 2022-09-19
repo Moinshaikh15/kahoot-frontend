@@ -9,13 +9,39 @@ import Create from "./Create";
 import Quiz from "./Quiz";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addSocket } from "../slices/userSlice";
+import { addKahoot, addSocket } from "../slices/userSlice";
 import Play from "./Play";
-import Room from "./Room";
 import Player from "./Player";
+import Report from "./Report";
 export default function App() {
   let dispatch = useDispatch();
+  let getKahoots = async () => {
+    let token = localStorage.getItem("accessToken");
+    try {
+      let resp = await fetch("http://localhost:8000/kahoot/", {
+        method: "GET",
+        headers: {
+          "content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
 
+      if (resp.status === 200) {
+        let data = await resp.json();
+        dispatch(addKahoot(data));
+        console.log(data);
+      } else {
+        let err = await resp.text();
+        alert(err);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getKahoots();
+  }, []);
   return (
     <div>
       <Routes>
@@ -23,12 +49,18 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="/main" element={<Main />}>
           <Route path="/main/" element={<Home />} />
-          <Route path="/main/:id" element={<Detail />} />
-          <Route path="/main/create" element={<Create />} />
+          <Route
+            path="/main/:id"
+            element={<Detail getKahoots={getKahoots} />}
+          />
+          <Route path="/main/report" element={<Report />} />
+          <Route
+            path="/main/create"
+            element={<Create getKahoots={getKahoots} />}
+          />
         </Route>
         <Route path="/play" element={<Play />} />
         <Route path="/quiz/:roomId" element={<Quiz />} />
-        <Route path="/room" element={<Room />} />
         <Route path="/player/" element={<Player />} />
       </Routes>
     </div>

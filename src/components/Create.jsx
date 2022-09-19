@@ -1,10 +1,11 @@
+import { getByPlaceholderText } from "@testing-library/react";
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteQues } from "../slices/userSlice";
 // let queId = "";
-export default function Create() {
+export default function Create({ getKahoots }) {
   let location = useLocation();
   let currKahoot = location?.state?.currKahoot;
   let goto = useNavigate();
@@ -29,6 +30,7 @@ export default function Create() {
   let typeDrop = useRef();
   let scoreDrop = useRef();
   let timeDrop = useRef();
+  let [highLight, setHighLight] = useState("blank");
   useEffect(() => {
     if (currKahoot) {
       setQuestions([]);
@@ -67,6 +69,7 @@ export default function Create() {
       });
       if (resp.status === 200) {
         let respData = await resp.text();
+        getKahoots();
         console.log(respData);
       } else {
         let err = await resp.text();
@@ -84,6 +87,7 @@ export default function Create() {
       timeLimit: time,
       creator: userInfo._id,
     };
+    console.log(data);
 
     let token = localStorage.getItem("accessToken");
     try {
@@ -98,6 +102,7 @@ export default function Create() {
       if (resp.status === 200) {
         let respData = await resp.json();
         console.log(respData);
+        getKahoots();
         goto("/main");
       } else {
         let err = await resp.text();
@@ -116,6 +121,8 @@ export default function Create() {
     let copyQuesArr = questions;
     copyQuesArr = copyQuesArr.filter((el) => el._id !== queId);
     setQuestions(copyQuesArr);
+
+    blank();
   };
 
   let handleClick = async (event) => {
@@ -177,7 +184,8 @@ export default function Create() {
     let newForm = new FormData(event.target);
     newForm.append("correctAns", correctAns);
     newForm.append("type", type);
-
+    newForm.append("timeLimit", time);
+    newForm.append("score", score);
     console.log(newForm.get("img").name);
     if (newForm.get("img").name !== "")
       newForm.append("img", newForm.get("img").file);
@@ -244,11 +252,12 @@ export default function Create() {
     //queId = e._id;
   };
   let blank = () => {
-    ref1.current.value = "";
-    ref2.current.value = "";
-    ref3.current.value = "";
-    ref4.current.value = "";
-    // imgRef.current.value = "";
+    ref1.current.value = type === "quiz" ? "" : "True";
+    ref2.current.value = type === "quiz" ? "" : "False";
+    if (type === "quiz") {
+      ref3.current.value = "";
+      ref4.current.value = "";
+    }
     queRef.current.value = "";
     typeDrop.current.value = "quiz";
     scoreDrop.current.value = "10";
@@ -256,6 +265,8 @@ export default function Create() {
     setEditing(false);
     setCorrectAns(null);
     setQueId("");
+    setImage("");
+    setType("quiz");
     queId = "";
   };
 
@@ -267,59 +278,77 @@ export default function Create() {
           {questions.map((e) => {
             console.log(e);
             return (
-              <div className="left-queCard" onClick={() => handleClickQ(e)}>
-                <p>{e.ques}</p>
-                <img
-                  style={{ color: "red", cursor: "pointer" }}
-                  onClick={() => {
-                    deleteQ(e._id);
-                  }}
-                  src={"../delete.png"}
-                  className="delete"
-                />
-                <div className="left-img">
-                  <img src={e.imgUrl} alt="" />
+              <div
+                className="highlight"
+                onClick={() => {
+                  setHighLight(e._id);
+                }}
+                style={{
+                  backgroundColor:
+                    highLight === e._id ? "rgb(218, 218, 240)" : "white",
+                }}
+              >
+                <div className="left-queCard" onClick={() => handleClickQ(e)}>
+                  <p>{e.ques}</p>
+                  <img
+                    style={{ color: "red", cursor: "pointer" }}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteQ(e._id);
+                    }}
+                    src={"../delete.png"}
+                    className="delete"
+                  />
+                  <div className="left-img" style={{ border: "none" }}>
+                    <img src={e.imgUrl} alt="" />
+                  </div>
+                  {e.type === "quiz" ? (
+                    <div className="left-opt-container">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  ) : (
+                    <div className="left-opt-container">
+                      <div></div>
+                      <div></div>
+                    </div>
+                  )}
                 </div>
-                {e.type === "quiz" ? (
-                  <div className="left-opt-container">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                ) : (
-                  <div className="left-opt-container">
-                    <div></div>
-                    <div></div>
-                  </div>
-                )}
               </div>
             );
           })}
-          <div className="left-queCard" onClick={() => blank()}>
-            <p>Question</p>
-            {/* <img
-              style={{ color: "red", cursor: "pointer" }}
-              // onClick={() => {
-              //   deleteQ(e._id);
-              // }}
-              src={"../delete.png"}
-              className="delete"
-            /> */}
-            <div className="left-img"></div>
-            {type === "quiz" ? (
-              <div className="left-opt-container">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-              </div>
-            ) : (
-              <div className="left-opt-container">
-                <div></div>
-                <div></div>
-              </div>
-            )}
+          <div
+            className="highlight"
+            style={{
+              backgroundColor:
+                highLight === "blank" ? "rgb(218, 218, 240)" : "white",
+            }}
+          >
+            <div
+              className="left-queCard"
+              onClick={() => {
+                setHighLight("blank");
+                blank();
+              }}
+            >
+              <p>Question</p>
+              <div className="left-img"></div>
+              {type === "quiz" ? (
+                <div className="left-opt-container">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              ) : (
+                <div className="left-opt-container">
+                  <div></div>
+                  <div></div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

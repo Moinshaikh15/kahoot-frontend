@@ -36,54 +36,58 @@ export default function Login() {
 
   return (
     <div className="login-main">
+      <img src="../pattern.jpg" alt="" className="pattern" />
       <div>
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
-          }}
-          validationSchema={Yup.object({
-            email: Yup.string()
-              .email("Invalid email address")
-              .required("Required"),
-            password: Yup.string()
-              .min(4, "Must be 4 characters long or more")
-              .required("Required"),
-          })}
-          onSubmit={async (values, { setSubmitting }) => {
-            logIn(values);
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <div>
-                <label htmlFor="email">Email</label>
-                <Field
-                  type="text"
-                  id="email"
-                  name="email"
-                  placeholder="user@mail.com"
-                ></Field>
-                <ErrorMessage name="email" className="err"></ErrorMessage>
-              </div>
-              <div>
-                <label htmlFor="password">password</label>
-                <Field
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="******"
-                ></Field>
-                <ErrorMessage name="password" className="err"></ErrorMessage>
-              </div>
+        <h1 className="branding">Quizzo</h1>
+        <div>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={Yup.object({
+              email: Yup.string()
+                .email("Invalid email address")
+                .required("Required"),
+              password: Yup.string()
+                .min(4, "Must be 4 characters long or more")
+                .required("Required"),
+            })}
+            onSubmit={async (values, { setSubmitting }) => {
+              logIn(values);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <Field
+                    type="text"
+                    id="email"
+                    name="email"
+                    placeholder="user@mail.com"
+                  ></Field>
+                  <ErrorMessage name="email" className="err"></ErrorMessage>
+                </div>
+                <div>
+                  <label htmlFor="password">password</label>
+                  <Field
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="******"
+                  ></Field>
+                  <ErrorMessage name="password" className="err"></ErrorMessage>
+                </div>
 
-              <button type="submit">logIn</button>
-            </Form>
-          )}
-        </Formik>
-        <p>
-          Already has an Account <Link to={"/signup"}>signup here</Link>
-        </p>
+                <button type="submit">logIn</button>
+              </Form>
+            )}
+          </Formik>
+          <p>
+            Already has an Account <Link to={"/signup"}>signup here</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -6,33 +6,33 @@ import Header from "./Header";
 export default function Main() {
   let dispatch = useDispatch();
   let { userInfo } = useSelector((state) => state.user);
-  let getKahoots = async () => {
-    let token = localStorage.getItem("accessToken");
-    try {
-      let resp = await fetch("http://localhost:8000/kahoot/", {
-        method: "GET",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
+  // let getKahoots = async () => {
+  //   let token = localStorage.getItem("accessToken");
+  //   try {
+  //     let resp = await fetch("http://localhost:8000/kahoot/", {
+  //       method: "GET",
+  //       headers: {
+  //         "content-Type": "application/json",
+  //         Authorization: "Bearer " + token,
+  //       },
+  //     });
 
-      if (resp.status === 200) {
-        let data = await resp.json();
-        dispatch(addKahoot(data));
-        console.log(data);
-      } else {
-        let err = await resp.text();
-        alert(err);
-      }
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  //     if (resp.status === 200) {
+  //       let data = await resp.json();
+  //       dispatch(addKahoot(data));
+  //       console.log(data);
+  //     } else {
+  //       let err = await resp.text();
+  //       alert(err);
+  //     }
+  //   } catch (err) {
+  //     alert(err.message);
+  //   }
+  // };
 
-  useEffect(() => {
-    getKahoots();
-  }, []);
+  // useEffect(() => {
+  //   getKahoots();
+  // }, []);
 
   return (
     <div>

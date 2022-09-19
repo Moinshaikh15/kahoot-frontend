@@ -35,7 +35,6 @@ export default function Leader({ board }) {
           <p className="name1">{board[0]?.name}</p>
           <div>
             <p className="score1">{board[0]?.count}</p>
-            <p className="score1">30</p>
             <p className="score1">Score</p>
           </div>
         </div>

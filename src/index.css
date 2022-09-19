@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Poppins&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dangrek&family=Fira+Code&family=Poppins&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -9,6 +10,12 @@ body {
   width: 100vw;
   height: 100vh;
   font-family: "Poppins", sans-serif;
+}
+.branding {
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: #1f4598;
+  font-family: "Dangrek", cursive;
 }
 /* loading */
 .loading-container {
@@ -72,11 +79,26 @@ body {
 
 .signup-main {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  gap: 20px;
+}
+.signup-main .pattern {
+  /* position: absolute; */
+  bottom: 0;
+  width: 700px;
+  left: 0;
+  z-index: -1;
+}
+.signup-main > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-radius: 5px;
 }
 form {
   display: flex;
@@ -109,13 +131,34 @@ form button {
   width: 100vw;
   height: 100vh;
   display: flex;
+  /* flex-direction: column; */
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-main > div {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
+  border-radius: 5px;
+}
+.login-main .pattern {
+  /* position: absolute; */
+  bottom: 0;
+  width: 700px;
+  left: 0;
+  z-index: -1;
 }
 
 /* header */
 .header {
   width: 100vw;
+  height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -123,6 +166,27 @@ form button {
   padding: 10px;
   background-color: white;
   box-shadow: 0px 1px 4px #b8b5b5;
+}
+.header .brand-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.header .brand-menu ul {
+  display: flex;
+  list-style-type: none;
+  gap: 10px;
+}
+.header .brand-menu li {
+  font-size: 18px;
+  font-weight: 500;
+  color: gray;
+  padding: 5px;
+  cursor: pointer;
+}
+.header .brand-menu .selected {
+  color: rgb(6, 6, 6);
 }
 .username {
   display: flex;
@@ -152,6 +216,7 @@ form button {
   padding: 10px;
   padding-top: 70px;
 }
+
 .home .kahoots-container {
   position: relative;
   display: flex;
@@ -237,14 +302,78 @@ form button {
   border-radius: 5px;
   box-shadow: 0px 4px 0px #1f4598;
 }
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80vw;
+  /* padding: 20px 10px; */
+  padding-top: 20px;
+}
+.report-Card {
+  background-color: white;
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+.report-Card div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* .report-Card p {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 14px;
+} */
+.report-Card img {
+  width: 150px;
+  height: 150px;
+}
+/* report page */
+.report {
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+}
 
+.report .score-container {
+  width: 70vw;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: white;
+  border-radius: 5px;
+}
+.report .score-container .score {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgb(94, 122, 182);
+  color: white;
+}
 /* details */
 .detail {
   display: flex;
   width: 100%;
   max-width: 100vw;
   min-height: 100vh;
-  padding-top: 50px;
+  padding-top: 70px;
 }
 .kahoot-detail {
   display: flex;
@@ -285,6 +414,7 @@ form button {
 
 .kahoot-detail .questions-container {
   padding: 10px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -346,7 +476,7 @@ form button {
   width: 100%;
   max-width: 100vw;
   display: flex;
-  padding-top: 50px;
+  padding-top: 70px;
 }
 .create .left {
   padding: 10px;
@@ -366,10 +496,17 @@ form button {
   flex-direction: column;
   gap: 10px;
 }
+.create .highlight {
+  width: 20vw;
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+}
 .create .left .left-queCard {
   position: relative;
   border-radius: 3px;
-  width: 90%;
+  width: 180px;
   height: 100px;
   display: flex;
   flex-direction: column;

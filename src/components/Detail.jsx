@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteQues, setQues } from "../slices/userSlice";
 
-export default function Detail() {
+export default function Detail({ getKahoots }) {
   let { id } = useParams();
   let goto = useNavigate();
   let dispatch = useDispatch();
@@ -27,6 +27,7 @@ export default function Detail() {
       });
       if (resp.status === 200) {
         let respData = await resp.text();
+        getKahoots();
         console.log(respData);
       } else {
         let err = await resp.text();

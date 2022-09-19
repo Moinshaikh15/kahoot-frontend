@@ -8,7 +8,10 @@ let kahoot;
 let questions = [];
 let i = 0;
 let correctAns = "";
+let time1 = 20;
+let showCorr = false;
 export default function Quiz() {
+  let time1 = 20;
   let location = useLocation();
   let id = location?.state?.id;
   let member = location?.state?.member;
@@ -16,14 +19,14 @@ export default function Quiz() {
   let totalMember = location?.state?.memberCount;
   let { roomId } = useParams();
   let { socket } = useSelector((state) => state.user);
-  let { kahoots, ques } = useSelector((state) => state.user);
+  let { kahoots, ques, userInfo } = useSelector((state) => state.user);
   let dispatch = useDispatch();
   let [currQues, setCurrQues] = useState("");
   let [options, setOptions] = useState([]);
   let [img, setImg] = useState("");
   //let [correctAns, setCorrectAns] = useState("");
   // let [kahoot, setKahoot] = useState(null);
-  let [showCorr, setShowCorr] = useState(false);
+  //let [showCorr, setShowCorr] = useState(false);
   let [name, setName] = useState("");
   let [ansCount, setAnsCount] = useState(0);
   let [selectedOpt, setSelectedOpt] = useState(null);
@@ -34,14 +37,28 @@ export default function Quiz() {
   let [queScore, setQueScore] = useState(10);
   //let [questions, setQuestions] = useState([]);
   let [showLeaderBoard, setShowLeaderBoard] = useState(true);
+  let [corrAnsGuess, setCorrAnsGuess] = useState(false);
+  let timeInterval;
+
   // functions
+  //--------------- teacher---------------
+  //load new ques
   let nextQue = (i) => {
-    console.log(i);
+    console.log(questions[i]);
     setCurrQues(questions[i]?.ques);
     setOptions(questions[i]?.options);
-    // setCorrectAns(() => questions[i]?.correctAns);
+    //setCorrectAns(() => questions[i]?.correctAns);
     correctAns = questions[i]?.correctAns;
     setImg(questions[i]?.imgUrl);
+    setQueScore(questions[i]?.score);
+    // setShowCorr(() => false);
+    showCorr = false;
+    setQueTime(questions[i]?.timeLimit);
+    setAnsCount(() => 0);
+    setSelectedOpt(null);
+    time1 = questions[i]?.timeLimit;
+    setCorrAnsGuess(() => false);
+
     socket.emit("new-que", {
       currQues: questions[i]?.ques,
       options: questions[i]?.options,
@@ -54,39 +71,25 @@ export default function Quiz() {
       socket.emit("finished", { roomId, id: socket.id });
       console.log("finished");
     }
-    // let interval = setInterval(() => {
-    //   i++;
-    //   if (i >= kahoot.questions.length) {
-    //     clearInterval(interval);
-    //     socket.emit("finished", roomId);
-    //     console.log("finished");
-    //   }
-
-    //   setCurrQues(questions[i]?.ques);
-    //   setOptions(questions[i]?.options);
-    //   setCorrectAns(questions[i].correctAns);
-    //   setImg(questions[i]?.imgUrl);
-    //   socket.emit("new-que", {
-    //     currQues: questions[i]?.ques,
-    //     options: questions[i]?.options,
-    //     imgUrl: questions[i]?.imgUrl,
-    //   });
-    // }, time);
+    startTimer();
   };
+
   let startTimer = () => {
-    let timeInterval = setInterval(() => {
-      if (time >= 0) {
-        setTime((time) => (time -= 1));
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
+      if (time1 >= 0) {
+        setQueTime((queTime) => (queTime -= 1));
+        time1 -= 1;
       }
-      if (time <= 0) {
+      if (time1 <= 0) {
+        //setShowCorr(true);
+        showCorr = true;
         clearInterval(timeInterval);
       }
-      return () => {
-        clearInterval(timeInterval);
-      };
     }, 1000);
   };
 
+  //--------------- teacher---------------
   let load = () => {
     kahoots.map((e) => {
       if (e._id === id) {
@@ -102,9 +105,10 @@ export default function Quiz() {
         }
       });
     });
-    // time = Number(kahoot.timeLimit) * 1000;
     nextQue(i);
   };
+
+  //--------------- teacher---------------
   let saveReport = async () => {
     console.log("board", board);
     let token = localStorage.getItem("accessToken");
@@ -115,7 +119,11 @@ export default function Quiz() {
           "content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ kahootId: id, scores: board }),
+        body: JSON.stringify({
+          kahootId: id,
+          scores: board,
+          teacherId: userInfo._id,
+        }),
       });
       if (resp.status === 200) {
         let respData = await resp.json();
@@ -132,7 +140,7 @@ export default function Quiz() {
   useEffect(() => {
     if (!member) {
       load();
-      startTimer();
+      // startTimer();
     }
 
     if (socket !== null) {
@@ -148,14 +156,15 @@ export default function Quiz() {
       setOptions(data.options);
       setImg(data.imgUrl);
       setQueScore(data.score);
-      setShowCorr(false);
+      showCorr = false;
       setQueTime(data.queTime);
-      setAnsCount(0);
       setSelectedOpt(null);
+      time1 = data.queTime;
+      setCorrAnsGuess(() => false);
       startTimer();
     });
+
     socket.on("answered", ({ ans, memberId }) => {
-      console.log(correctAns);
       console.log("yess", ans, correctAns);
       setAnsCount((AnsCount) => AnsCount + 1);
       if (ans === correctAns) {
@@ -163,64 +172,59 @@ export default function Quiz() {
         console.log(ans);
       }
     });
+
     socket.on("board", (data) => {
       let copyBoard = data;
       copyBoard.sort((a, b) => b.count - a.count);
       console.log(copyBoard);
       setBoard(copyBoard);
       setShowBoard(true);
+      //saveReport();
       setTimeout(() => {
         setShowLeaderBoard(false);
       }, 20000);
     });
-    // socket.on("corrAns", () => {
-    //   console.log("yesCor");
-    //   setShowCorr(true);
-    // });
+
+    socket.on("corrAns", () => {
+      console.log("yesCor");
+      setCorrAnsGuess(true);
+      // setShowCorr(true);
+    });
   }, []);
 
   return (
     <div className="quiz">
       {showBoard ? (
-        <>
-          {showLeaderBoard ? (
-            <Leader board={board}/>
-          ) : (
-            <>
-              {member ? (
-                <div className="your-score">
-                  {board.map((el) => {
-                    if (el.name === playerName) {
-                      return (
-                        <div className="my-score">
-                          <h1>{el.count}</h1>
-                          <p>Your Score</p>
-                        </div>
-                      );
-                    }
-                  })}
-                </div>
-              ) : (
-                <div>
-                  <p style={{ color: "white", fontSize: "22px" }}>
-                    Score Board
-                  </p>
-                  <div className="scoreBoard">
-                    {board.map((el) => (
-                      <div className="score">
-                        <p>{el.name}</p>
-                        <p>{el.count}</p>
-                      </div>
-                    ))}
+        member ? (
+          <div className="your-score">
+            {board.map((el, index) => {
+              if (el.name === playerName) {
+                return (
+                  <div className="my-score">
+                    {/* {index === 0 ? <img src="../first.jpg" alt="" /> : ""} */}
+                    <h1>{el.count}</h1>
+                    <p>Your Score</p>
                   </div>
-                  <button className="save-report" onClick={() => saveReport()}>
-                    Save Report
-                  </button>
+                );
+              }
+            })}
+          </div>
+        ) : showLeaderBoard ? (
+          <Leader board={board} />
+        ) : (
+          <div>
+            <h2 className="title">{kahoot?.title}</h2>
+            <p style={{ color: "white", fontSize: "22px" }}>Score Board</p>
+            <div className="scoreBoard">
+              {board.map((el) => (
+                <div className="score">
+                  <p>{el.name}</p>
+                  <p>{el.count}</p>
                 </div>
-              )}
-            </>
-          )}
-        </>
+              ))}
+            </div>
+          </div>
+        )
       ) : (
         <>
           {member ? (
@@ -239,17 +243,9 @@ export default function Quiz() {
             </button>
           )}
 
-          {/* <h2 className="title">{kahoot?.title}</h2>
-          <div className="timer"></div> */}
-
           {!member ? (
             <div className="overview">
-              {/* {options?.map((el) => (
-                <div className="opt">
-                  <p>{el}</p> <p></p>
-                </div>
-              ))} */}
-              <p className="opt">Members Answered</p>
+              <p className="opt">Students Answered</p>
               <p className="opt" style={{ width: "40px" }}>
                 {ansCount}/{totalMember}
               </p>
@@ -265,7 +261,7 @@ export default function Quiz() {
             <>
               <div className="timer">
                 <div>
-                  <p>{time}</p>
+                  <p>{queTime}</p>
                 </div>
               </div>
 
@@ -287,8 +283,13 @@ export default function Quiz() {
                           }
                         }}
                         style={{
-                          backgroundColor:
-                            selectedOpt === el ? "rgb(37, 39, 50)" : "",
+                          backgroundColor: showCorr
+                            ? correctAns === el
+                              ? "#8ac926"
+                              : ""
+                            : selectedOpt === el
+                            ? "rgb(37, 39, 50)"
+                            : "",
                           color: selectedOpt === el ? "white" : "",
                         }}
                       >
@@ -297,13 +298,25 @@ export default function Quiz() {
                     </div>
                   ))}
                 </div>
-                {/* {member ? (
-            <div style={{ display: showCorr ? "flex" : "none" }}>
-              <p>Correct Answer</p>
-            </div>
-          ) : (
-            ""
-          )} */}
+                {member ? (
+                  <div style={{ display: showCorr ? "flex" : "none" }}>
+                    {corrAnsGuess ? (
+                      <p style={{ color: "#8ac926" }}>Correct Answer</p>
+                    ) : (
+                      <p
+                        style={{
+                          color: "#d62828",
+                          fontSize: "18px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        Opps Better luck next Time
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </>
           )}
