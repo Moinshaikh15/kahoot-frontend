@@ -69,7 +69,7 @@ export default function Play() {
           <div className="room-id">
             <div>
               <p>join at</p>
-              <p style={{ fontWeight: "700" }}>http://localhost:3000/player</p>
+              <p style={{ fontWeight: "700" }}>https://kahoot-frontend.vercel.app/player</p>
             </div>
 
             <div>
