@@ -381,13 +381,28 @@ export default function Create({ getKahoots }) {
           />
 
           <div className="form-image-div">
-            <input
+            {/* <input
               type="file"
               id="img"
               name="img"
               accept="image/*"
               ref={imgRef}
               className="img-input"
+              onChange={(event) => {
+                if (event.target.files && event.target.files[0]) {
+                  setImage(() => URL.createObjectURL(event.target.files[0]));
+                }
+              }}
+            /> */}
+            <input
+              type="file"
+              id="img"
+              name="img"
+              accept="image/*"
+              ref={imgRef}
+              class="inputfile inputfile-1"
+              data-multiple-caption="{count} files selected"
+              multiple
               onChange={(event) => {
                 if (event.target.files && event.target.files[0]) {
                   setImage(() => URL.createObjectURL(event.target.files[0]));
