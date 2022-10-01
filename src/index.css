@@ -166,6 +166,7 @@ form button {
   padding: 10px;
   background-color: white;
   box-shadow: 0px 1px 4px #b8b5b5;
+  z-index: 2;
 }
 .header .brand-menu {
   display: flex;
@@ -305,10 +306,13 @@ form button {
 .report-container {
   display: flex;
   flex-direction: column;
+  padding: 10px;
   gap: 10px;
   width: 80vw;
+  /* height: 550px; */
   /* padding: 20px 10px; */
   padding-top: 20px;
+  /* overflow: auto; */
 }
 .report-Card {
   background-color: white;
@@ -321,6 +325,7 @@ form button {
   gap: 10px;
   border-radius: 5px;
   position: relative;
+  cursor: pointer;
 }
 .report-Card div {
   display: flex;
@@ -605,6 +610,7 @@ form button {
   outline: none;
   box-shadow: 0px 4px 0px #bfbfbf;
 }
+
 .middle .form-image-div {
   width: 350px;
   height: 300px;
@@ -649,6 +655,7 @@ form button {
   height: 25px;
   border-radius: 50%;
   border: 2px solid gray;
+  background-color: white;
   position: absolute;
   right: 8px;
   top: 30%;
@@ -934,9 +941,9 @@ form button {
   padding: 10px;
 }
 .quiz .option button {
-  font-size: 34px;
+  font-size: 1.2em;
   font-weight: 700;
-  width: 30vh;
+  width: 40vh;
   height: 60px;
   border: none;
   display: flex;

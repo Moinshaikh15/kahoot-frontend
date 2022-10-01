@@ -140,14 +140,12 @@ export default function Quiz() {
   useEffect(() => {
     if (!member) {
       load();
-      // startTimer();
     }
 
-    if (socket !== null) {
-      socket.on("connect", (client) => {
-        console.log("Client connected", client.id);
-      });
-    }
+    socket?.on("connect", (client) => {
+      i = 0;
+      console.log("Client connected", client.id);
+    });
 
     //socket's
     socket.on("got-newQue", (data) => {

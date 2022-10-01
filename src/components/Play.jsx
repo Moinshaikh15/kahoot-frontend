@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
 import QRCode from "react-qr-code";
 import { FOCUSABLE_SELECTOR } from "@testing-library/user-event/dist/utils";
-// let roomId2=''
+
 export default function Play() {
   let location = useLocation();
   let id = location?.state?.id;
@@ -31,7 +31,6 @@ export default function Play() {
     }
     socket?.on("member-joined", (data) => {
       setUsersJoined(data);
-      console.log(data);
     });
   }, []);
 

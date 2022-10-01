@@ -6,7 +6,6 @@ import { setShowQuiz } from "../slices/userSlice";
 export default function Header() {
   let { userInfo } = useSelector((state) => state.user);
   let goto = useNavigate();
-  console.log(userInfo);
   let dispatch = useDispatch();
   let [selected, setSelected] = useState(1);
   let logout = () => {

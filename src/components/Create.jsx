@@ -409,11 +409,18 @@ export default function Create({ getKahoots }) {
                 }
               }}
             />
-            {image !== "" ? (
+            <label htmlFor="img">
+              <img
+                src={image !== "" ? image : "/plus.png"}
+                alt="your image"
+                style={{ width: image !== "" ? "" : "30px",height: image !== "" ? "" : "30px",filter:image !== "" ? "" :"invert(50%)" }}
+              />
+            </label>
+            {/* {image !== "" ? (
               <img src={image} alt="your image" />
             ) : (
               <label htmlFor="img">Insert Image</label>
-            )}
+            )} */}
           </div>
 
           {type === "quiz" ? (

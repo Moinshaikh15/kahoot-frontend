@@ -25,7 +25,6 @@ export default function Home() {
       if (resp.status === 200) {
         let data = await resp.json();
         dispatch(setQues(data));
-        console.log(data);
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -48,7 +47,6 @@ export default function Home() {
       if (resp.status === 200) {
         let data = await resp.json();
         dispatch(setReport(data));
-        console.log(data);
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -69,7 +67,7 @@ export default function Home() {
             <h3>My Quizes</h3>
             <div className="kahoots-card-container">
               {kahoots.map((el) =>
-                el.creator === userInfo._id ? (
+                el?.creator === userInfo?._id ? (
                   <div
                     key={el._id}
                     className="kahoot-card"
@@ -78,8 +76,8 @@ export default function Home() {
                     <div className="kahoot-title-card">
                       <img src="../quiz.jpg" alt="" />
                       <div className="kahoot-title">
-                        <h4>{el.title}</h4>
-                        <p>{el.questions.length} Questions</p>
+                        <h4>{el?.title}</h4>
+                        <p>{el?.questions.length} Questions</p>
                       </div>
                     </div>
 
@@ -123,8 +121,8 @@ export default function Home() {
                   >
                     <img src="../quiz.jpg" alt="" />
                     <div>
-                      <h3>{el.kahootId.title}</h3>
-                      <p>Teacher: {el.teacherId.name}</p>
+                      <h3>{el.kahootId?.title}</h3>
+                      <p>Teacher: {el.teacherId?.name}</p>
                       <p>last played :{el.updatedAt}</p>
                     </div>
                   </div>
