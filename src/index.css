@@ -894,12 +894,7 @@ form button {
   border-radius: 5px;
   box-shadow: 0px 4px 0px #939394;
 }
-.quiz .title {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  color: white;
-}
+
 .quiz .name {
   position: absolute;
   top: 0;
@@ -971,8 +966,13 @@ form button {
   padding: 5px;
   border-radius: 2px;
 }
-
-.quiz .scoreBoard {
+.title {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: white;
+}
+.scoreBoard {
   background-color: white;
   width: 50vw;
   display: flex;
@@ -981,7 +981,7 @@ form button {
   padding: 10px;
   border-radius: 5px;
 }
-.quiz .scoreBoard .score {
+.scoreBoard .score {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -991,10 +991,10 @@ form button {
   background-color: rgba(173, 180, 205, 0.593);
 }
 
-.quiz .your-score {
+.your-score {
   color: white;
 }
-.quiz .your-score .my-score {
+.your-score .my-score {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1002,12 +1002,12 @@ form button {
   gap: 10px;
 }
 
-.quiz .your-score h1 {
+.your-score h1 {
   font-size: 50px;
   font-weight: 700;
 }
 
-.quiz .your-score p {
+.your-score p {
   font-size: 25px;
 }
 
@@ -1021,8 +1021,17 @@ form button {
   border-radius: 5px;
   box-shadow: 0px 4px 0px #2f2f2f;
 }
+.scores {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6f31c1;
+  position: relative;
+}
 
-.quiz .leaderBoard {
+.leaderBoard {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -1100,3 +1109,9 @@ form button {
     opacity: 1;
   }
 } ;
+
+.back-home-btn{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}

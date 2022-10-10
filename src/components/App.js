@@ -13,6 +13,7 @@ import { addKahoot, addSocket } from "../slices/userSlice";
 import Play from "./Play";
 import Player from "./Player";
 import Report from "./Report";
+import Scores from "./Scores";
 export default function App() {
   let dispatch = useDispatch();
   let getKahoots = async () => {
@@ -32,7 +33,7 @@ export default function App() {
         console.log(data);
       } else {
         let err = await resp.text();
-        alert(err);
+        //alert(err);
       }
     } catch (err) {
       alert(err.message);
@@ -40,7 +41,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    getKahoots();
+    let token = localStorage.getItem("accessToken");
+    if (token) getKahoots();
   }, []);
   return (
     <div>
@@ -61,6 +63,7 @@ export default function App() {
         </Route>
         <Route path="/play" element={<Play />} />
         <Route path="/quiz/:roomId" element={<Quiz />} />
+        <Route path="/score" element={<Scores />} />
         <Route path="/player/" element={<Player />} />
       </Routes>
     </div>

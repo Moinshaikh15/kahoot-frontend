@@ -41,10 +41,8 @@ export default function Play() {
   }
 
   const handleCopyClick = (copyText) => {
-    // Asynchronously call copyTextToClipboard
     copyTextToClipboard(copyText)
       .then(() => {
-        // If successful, update the isCopied state value
         setIsCopied(true);
         setTimeout(() => {
           setIsCopied(false);
@@ -68,7 +66,13 @@ export default function Play() {
           <div className="room-id">
             <div>
               <p>join at</p>
-              <p style={{ fontWeight: "700" }}>https://kahoot-frontend.vercel.app/player</p>
+              <a
+                style={{ fontWeight: "700", textDecoration: "none" }}
+                href="https://kahoot-frontend.vercel.app/player"
+                target="blank"
+              >
+                https://kahoot-frontend.vercel.app/player
+              </a>
             </div>
 
             <div>
@@ -84,9 +88,8 @@ export default function Play() {
                 </p>
               ) : (
                 <p
-                  style={{ fontSize: "24px", fontWeight: "700" }}
+                  style={{ fontSize: "20px", fontWeight: "700" }}
                   className="roomId"
-                  onClick={() => handleCopyClick(roomId)}
                 >
                   loading Pin...
                 </p>
@@ -105,11 +108,12 @@ export default function Play() {
 
       <div className="bottom">
         <button
-          onClick={() =>
-            goto(`/quiz/${roomId}`, {
-              state: { id, memberCount: usersJoined.length },
-            })
-          }
+          onClick={() => {
+            if (roomId)
+              goto(`/quiz/${roomId}`, {
+                state: { id, memberCount: usersJoined.length },
+              });
+          }}
         >
           Start
         </button>

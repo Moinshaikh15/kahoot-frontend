@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { addSocket } from "../slices/userSlice";
 import Leader from "./Leader";
@@ -12,6 +12,7 @@ let time1 = 20;
 let showCorr = false;
 export default function Quiz() {
   let time1 = 20;
+  let goto = useNavigate();
   let location = useLocation();
   let id = location?.state?.id;
   let member = location?.state?.member;
@@ -20,14 +21,10 @@ export default function Quiz() {
   let { roomId } = useParams();
   let { socket } = useSelector((state) => state.user);
   let { kahoots, ques, userInfo } = useSelector((state) => state.user);
-  let dispatch = useDispatch();
+
   let [currQues, setCurrQues] = useState("");
   let [options, setOptions] = useState([]);
   let [img, setImg] = useState("");
-  //let [correctAns, setCorrectAns] = useState("");
-  // let [kahoot, setKahoot] = useState(null);
-  //let [showCorr, setShowCorr] = useState(false);
-  let [name, setName] = useState("");
   let [ansCount, setAnsCount] = useState(0);
   let [selectedOpt, setSelectedOpt] = useState(null);
   let [board, setBoard] = useState([]);
@@ -35,7 +32,6 @@ export default function Quiz() {
   let [queTime, setQueTime] = useState(20);
   let [time, setTime] = useState(20);
   let [queScore, setQueScore] = useState(10);
-  //let [questions, setQuestions] = useState([]);
   let [showLeaderBoard, setShowLeaderBoard] = useState(true);
   let [corrAnsGuess, setCorrAnsGuess] = useState(false);
   let timeInterval;
@@ -44,7 +40,6 @@ export default function Quiz() {
   //--------------- teacher---------------
   //load new ques
   let nextQue = (i) => {
-    console.log(questions[i]);
     setCurrQues(questions[i]?.ques);
     setOptions(questions[i]?.options);
     //setCorrectAns(() => questions[i]?.correctAns);
@@ -69,7 +64,6 @@ export default function Quiz() {
 
     if (i >= kahoot.questions.length) {
       socket.emit("finished", { roomId, id: socket.id });
-      console.log("finished");
     }
     startTimer();
   };
@@ -127,7 +121,6 @@ export default function Quiz() {
       });
       if (resp.status === 200) {
         let respData = await resp.json();
-        console.log(respData);
       } else {
         let err = await resp.text();
         alert(err.message);
@@ -149,7 +142,6 @@ export default function Quiz() {
 
     //socket's
     socket.on("got-newQue", (data) => {
-      console.log("got", data);
       setCurrQues(data.currQues);
       setOptions(data.options);
       setImg(data.imgUrl);
@@ -163,43 +155,45 @@ export default function Quiz() {
     });
 
     socket.on("answered", ({ ans, memberId }) => {
-      console.log("yess", ans, correctAns);
       setAnsCount((AnsCount) => AnsCount + 1);
       if (ans === correctAns) {
         socket.emit("correct", { roomId, memberId, queScore });
-        console.log(ans);
       }
     });
 
     socket.on("board", (data) => {
       let copyBoard = data;
       copyBoard.sort((a, b) => b.count - a.count);
-      console.log(copyBoard);
-      setBoard(copyBoard);
-      setShowBoard(true);
+      setBoard(() => copyBoard);
+      //setShowBoard(true);
       saveReport();
-      setTimeout(() => {
-        setShowLeaderBoard(false);
-      }, 20000);
+      // setTimeout(() => {
+      //   setShowLeaderBoard(false);
+      // }, 20000);
+      goto("/score", {
+        state: {
+          board: copyBoard,
+          kahootTitle: kahoot?.title,
+          member,
+          playerName,
+        },
+      });
     });
 
     socket.on("corrAns", () => {
-      console.log("yesCor");
       setCorrAnsGuess(true);
-      // setShowCorr(true);
     });
   }, []);
 
   return (
     <div className="quiz">
-      {showBoard ? (
+      {/* {showBoard ? (
         member ? (
           <div className="your-score">
             {board.map((el, index) => {
               if (el.name === playerName) {
                 return (
                   <div className="my-score">
-                    {/* {index === 0 ? <img src="../first.jpg" alt="" /> : ""} */}
                     <h1>{el.count}</h1>
                     <p>Your Score</p>
                   </div>
@@ -223,103 +217,102 @@ export default function Quiz() {
             </div>
           </div>
         )
-      ) : (
-        <>
-          {member ? (
-            <div className="name">
-              <p>{playerName}</p>
-            </div>
-          ) : (
-            <button
-              onClick={() => {
-                i++;
-                nextQue(i);
-              }}
-              className="next"
-            >
-              Next
-            </button>
-          )}
+      ) : ( */}
+      <>
+        {member ? (
+          <div className="name">
+            <p>{playerName}</p>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              i++;
+              nextQue(i);
+            }}
+            className="next"
+          >
+            Next
+          </button>
+        )}
 
-          {!member ? (
-            <div className="overview">
-              <p className="opt">Students Answered</p>
-              <p className="opt" style={{ width: "40px" }}>
-                {ansCount}/{totalMember}
-              </p>
+        {!member ? (
+          <div className="overview">
+            <p className="opt">Students Answered</p>
+            <p className="opt" style={{ width: "40px" }}>
+              {ansCount}/{totalMember}
+            </p>
+          </div>
+        ) : (
+          ""
+        )}
+        {currQues === "" ? (
+          <div v style={{ color: "white", fontSize: "22px" }}>
+            <h4>Waiting for Quiz to Start</h4>
+          </div>
+        ) : (
+          <>
+            <div className="timer">
+              <div>
+                <p>{queTime}</p>
+              </div>
             </div>
-          ) : (
-            ""
-          )}
-          {currQues === "" ? (
-            <div v style={{ color: "white", fontSize: "22px" }}>
-              <h4>Waiting for Quiz to Start</h4>
-            </div>
-          ) : (
-            <>
-              <div className="timer">
-                <div>
-                  <p>{queTime}</p>
-                </div>
+
+            <div className="ques">
+              <div className="question">
+                <h3>{currQues}</h3>
               </div>
 
-              <div className="ques">
-                <div className="question">
-                  <h3>{currQues}</h3>
-                </div>
-
-                {img !== "" ? <img src={img} alt="" /> : ""}
-                <div className="option">
-                  {options?.map((el) => (
-                    <div>
-                      <button
-                        onClick={() => {
-                          if (selectedOpt === null) {
-                            console.log("clicked");
-                            setSelectedOpt(el);
-                            socket.emit("option-selected", { el, roomId });
-                          }
-                        }}
-                        style={{
-                          backgroundColor: showCorr
-                            ? correctAns === el
-                              ? "#8ac926"
-                              : ""
-                            : selectedOpt === el
-                            ? "rgb(37, 39, 50)"
-                            : "",
-                          color: selectedOpt === el ? "white" : "",
-                        }}
-                      >
-                        {el}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                {member ? (
-                  <div style={{ display: showCorr ? "flex" : "none" }}>
-                    {corrAnsGuess ? (
-                      <p style={{ color: "#8ac926" }}>Correct Answer</p>
-                    ) : (
-                      <p
-                        style={{
-                          color: "#d62828",
-                          fontSize: "18px",
-                          marginTop: "10px",
-                        }}
-                      >
-                        Opps Better luck next Time
-                      </p>
-                    )}
+              {img !== "" ? <img src={img} alt="" /> : ""}
+              <div className="option">
+                {options?.map((el) => (
+                  <div>
+                    <button
+                      onClick={() => {
+                        if (selectedOpt === null) {
+                          setSelectedOpt(el);
+                          socket.emit("option-selected", { el, roomId });
+                        }
+                      }}
+                      style={{
+                        backgroundColor: showCorr
+                          ? correctAns === el
+                            ? "#8ac926"
+                            : ""
+                          : selectedOpt === el
+                          ? "rgb(37, 39, 50)"
+                          : "",
+                        color: selectedOpt === el ? "white" : "",
+                      }}
+                    >
+                      {el}
+                    </button>
                   </div>
-                ) : (
-                  ""
-                )}
+                ))}
               </div>
-            </>
-          )}
-        </>
-      )}
+              {member ? (
+                <div style={{ display: showCorr ? "flex" : "none" }}>
+                  {corrAnsGuess ? (
+                    <p style={{ color: "#8ac926" }}>Correct Answer</p>
+                  ) : (
+                    <p
+                      style={{
+                        color: "#d62828",
+                        fontSize: "18px",
+                        marginTop: "10px",
+                      }}
+                    >
+                      Opps Better luck next Time
+                    </p>
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </>
+        )}
+      </>
+      {/* )} */}
     </div>
   );
 }
