@@ -25,7 +25,7 @@ export default function Leader({ board }) {
 
   return (
     <div className="leaderBoard">
-      {showConfetti ? <Confetti /> : ""}
+      {showConfetti ? <Confetti className="confetti"/> : ""}
 
       <div className="middle-box">
         <div className="second">

@@ -172,9 +172,8 @@ export default function Create({ getKahoots }) {
     } catch (err) {
       alert(err.message);
     }
-
-    // data = JSON.stringify(data);
-    // setQuestions((oldArr) => [...oldArr, data]);
+    
+    //reset once ques added
     ref1.current.value = "";
     ref2.current.value = "";
     ref3.current.value = "";
@@ -247,15 +246,12 @@ export default function Create({ getKahoots }) {
     typeDrop.current.value = e.type;
     scoreDrop.current.value = e.score;
     timeDrop.current.value = e.timeLimit;
-    // imgRef.current.value = e.imgRef ? e.imgUrl : "";
     setEditing(true);
     setCorrectAns(e.correctAns);
     setQueId(e._id);
     setImgURL(e.imgUrl);
     setImage(e.imgUrl);
     setType(e.type);
-
-    //queId = e._id;
   };
   let blank = () => {
     ref1.current.value = type === "quiz" ? "" : "True";
@@ -381,26 +377,13 @@ export default function Create({ getKahoots }) {
           />
 
           <div className="form-image-div">
-            {/* <input
-              type="file"
-              id="img"
-              name="img"
-              accept="image/*"
-              ref={imgRef}
-              className="img-input"
-              onChange={(event) => {
-                if (event.target.files && event.target.files[0]) {
-                  setImage(() => URL.createObjectURL(event.target.files[0]));
-                }
-              }}
-            /> */}
             <input
               type="file"
               id="img"
               name="img"
               accept="image/*"
               ref={imgRef}
-              class="inputfile inputfile-1"
+              className="inputfile inputfile-1"
               data-multiple-caption="{count} files selected"
               multiple
               onChange={(event) => {
@@ -416,11 +399,6 @@ export default function Create({ getKahoots }) {
                 style={{ width: image !== "" ? "" : "30px",height: image !== "" ? "" : "30px",filter:image !== "" ? "" :"invert(50%)" }}
               />
             </label>
-            {/* {image !== "" ? (
-              <img src={image} alt="your image" />
-            ) : (
-              <label htmlFor="img">Insert Image</label>
-            )} */}
           </div>
 
           {type === "quiz" ? (

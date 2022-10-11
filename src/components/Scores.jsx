@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import Leader from "./Leader";
 
 export default function Scores() {
+  let goto=useNavigate()
   let location = useLocation();
   let board = location?.state?.board;
   let kahootTitle = location?.state?.kahootTitle;
@@ -47,10 +48,10 @@ export default function Scores() {
               </div>
             ))}
           </div>
+
+          <button className="back-home" onClick={()=>goto('/main/')}>Home</button>
         </div>
       )}
-
-      <button className="back-home-btn">Home</button>
     </div>
   );
 }

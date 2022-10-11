@@ -165,11 +165,7 @@ export default function Quiz() {
       let copyBoard = data;
       copyBoard.sort((a, b) => b.count - a.count);
       setBoard(() => copyBoard);
-      //setShowBoard(true);
       saveReport();
-      // setTimeout(() => {
-      //   setShowLeaderBoard(false);
-      // }, 20000);
       goto("/score", {
         state: {
           board: copyBoard,
@@ -187,132 +183,98 @@ export default function Quiz() {
 
   return (
     <div className="quiz">
-      {/* {showBoard ? (
-        member ? (
-          <div className="your-score">
-            {board.map((el, index) => {
-              if (el.name === playerName) {
-                return (
-                  <div className="my-score">
-                    <h1>{el.count}</h1>
-                    <p>Your Score</p>
-                  </div>
-                );
-              }
-            })}
+      {member ? (
+        <div className="name">
+          <p>{playerName}</p>
+        </div>
+      ) : (
+        <button
+          onClick={() => {
+            i++;
+            nextQue(i);
+          }}
+          className="next"
+        >
+          Next
+        </button>
+      )}
+
+      {!member ? (
+        <div className="overview">
+          <p className="opt">Students Answered</p>
+          <p className="opt" style={{ width: "40px" }}>
+            {ansCount}/{totalMember}
+          </p>
+        </div>
+      ) : (
+        ""
+      )}
+      {currQues === "" ? (
+        <div v style={{ color: "white", fontSize: "22px" }}>
+          <h4>Waiting for Quiz to Start</h4>
+        </div>
+      ) : (
+        <>
+          <div className="timer">
+            <div>
+              <p>{queTime}</p>
+            </div>
           </div>
-        ) : showLeaderBoard ? (
-          <Leader board={board} />
-        ) : (
-          <div>
-            <h2 className="title">{kahoot?.title}</h2>
-            <p style={{ color: "white", fontSize: "22px" }}>Score Board</p>
-            <div className="scoreBoard">
-              {board.map((el) => (
-                <div className="score">
-                  <p>{el.name}</p>
-                  <p>{el.count}</p>
+
+          <div className="ques">
+            <div className="question">
+              <h3>{currQues}</h3>
+            </div>
+
+            {img !== "" ? <img src={img} alt="" /> : ""}
+            <div className="option">
+              {options?.map((el) => (
+                <div>
+                  <button
+                    onClick={() => {
+                      if (selectedOpt === null) {
+                        setSelectedOpt(el);
+                        socket.emit("option-selected", { el, roomId });
+                      }
+                    }}
+                    style={{
+                      backgroundColor: showCorr
+                        ? correctAns === el
+                          ? "#8ac926"
+                          : ""
+                        : selectedOpt === el
+                        ? "rgb(37, 39, 50)"
+                        : "",
+                      color: selectedOpt === el ? "white" : "",
+                    }}
+                  >
+                    {el}
+                  </button>
                 </div>
               ))}
             </div>
-          </div>
-        )
-      ) : ( */}
-      <>
-        {member ? (
-          <div className="name">
-            <p>{playerName}</p>
-          </div>
-        ) : (
-          <button
-            onClick={() => {
-              i++;
-              nextQue(i);
-            }}
-            className="next"
-          >
-            Next
-          </button>
-        )}
-
-        {!member ? (
-          <div className="overview">
-            <p className="opt">Students Answered</p>
-            <p className="opt" style={{ width: "40px" }}>
-              {ansCount}/{totalMember}
-            </p>
-          </div>
-        ) : (
-          ""
-        )}
-        {currQues === "" ? (
-          <div v style={{ color: "white", fontSize: "22px" }}>
-            <h4>Waiting for Quiz to Start</h4>
-          </div>
-        ) : (
-          <>
-            <div className="timer">
-              <div>
-                <p>{queTime}</p>
+            {member ? (
+              <div style={{ display: showCorr ? "flex" : "none" }}>
+                {corrAnsGuess ? (
+                  <p style={{ color: "#8ac926" }}>Correct Answer</p>
+                ) : (
+                  <p
+                    style={{
+                      color: "#d62828",
+                      fontSize: "18px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Opps Better luck next Time
+                  </p>
+                )}
               </div>
-            </div>
-
-            <div className="ques">
-              <div className="question">
-                <h3>{currQues}</h3>
-              </div>
-
-              {img !== "" ? <img src={img} alt="" /> : ""}
-              <div className="option">
-                {options?.map((el) => (
-                  <div>
-                    <button
-                      onClick={() => {
-                        if (selectedOpt === null) {
-                          setSelectedOpt(el);
-                          socket.emit("option-selected", { el, roomId });
-                        }
-                      }}
-                      style={{
-                        backgroundColor: showCorr
-                          ? correctAns === el
-                            ? "#8ac926"
-                            : ""
-                          : selectedOpt === el
-                          ? "rgb(37, 39, 50)"
-                          : "",
-                        color: selectedOpt === el ? "white" : "",
-                      }}
-                    >
-                      {el}
-                    </button>
-                  </div>
-                ))}
-              </div>
-              {member ? (
-                <div style={{ display: showCorr ? "flex" : "none" }}>
-                  {corrAnsGuess ? (
-                    <p style={{ color: "#8ac926" }}>Correct Answer</p>
-                  ) : (
-                    <p
-                      style={{
-                        color: "#d62828",
-                        fontSize: "18px",
-                        marginTop: "10px",
-                      }}
-                    >
-                      Opps Better luck next Time
-                    </p>
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </>
-        )}
-      </>
-      {/* )} */}
+            ) : (
+              ""
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
