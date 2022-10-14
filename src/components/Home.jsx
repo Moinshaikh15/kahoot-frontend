@@ -113,8 +113,7 @@ export default function Home() {
             <h3>Reports</h3>
             <div className="report-container">
               {report.map((el) => {
-                console.log(el);
-                return (
+                return el?.teacherId._id === userInfo?._id ? (
                   <div
                     className="report-Card"
                     onClick={() => goto("/main/report", { state: { el } })}
@@ -126,6 +125,8 @@ export default function Home() {
                       <p>last played :{el.updatedAt}</p>
                     </div>
                   </div>
+                ) : (
+                  ""
                 );
               })}
             </div>

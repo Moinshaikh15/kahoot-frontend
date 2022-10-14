@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../slices/userSlice";
+import GoogleLogin from "react-google-login";
+import { gapi } from "gapi-script";
 export default function Login() {
   let goto = useNavigate();
   let dispatch = useDispatch();
   let logIn = async (obj) => {
+    console.log(obj);
     try {
       let resp = await fetch("https://quizzo-ms.herokuapp.com/auth/login", {
         method: "POST",
@@ -33,6 +36,19 @@ export default function Login() {
       alert(err.message);
     }
   };
+
+  const clientId = '619944836365-qaofe6um359206nfp8ipju8m1mi7au31.apps.googleusercontent.com';
+
+  useEffect(() => {
+     const initClient = () => {
+           gapi.client.init({
+           clientId: clientId,
+           scope: ''
+         });
+      };
+      gapi.load('client:auth2', initClient);
+  });
+
 
   return (
     <div className="login-main">
@@ -84,8 +100,19 @@ export default function Login() {
               </Form>
             )}
           </Formik>
+
+          <GoogleLogin
+            clientId={
+              "619944836365-qaofe6um359206nfp8ipju8m1mi7au31.apps.googleusercontent.com"
+            }
+            buttonText="Log in with Google"
+            onSuccess={logIn}
+            onFailure={logIn}
+            cookiePolicy={"single_host_origin"}
+            className="google-login"
+          />
           <p>
-            Already has an Account <Link to={"/signup"}>signup here</Link>
+            Don't have an Account <Link to={"/signup"}>signup here</Link>
           </p>
         </div>
       </div>

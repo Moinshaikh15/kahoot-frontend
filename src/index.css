@@ -138,7 +138,10 @@ form button {
   position: relative;
   z-index: 1;
 }
+.google-login{
+  margin-top: 10px;
 
+}
 .login-main > div {
   display: flex;
   flex-direction: column;
